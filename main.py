@@ -57,7 +57,7 @@ async def on_message(message):
 @client.event
 # member join event
 async def on_member_join(member):
-    memberAvatar = member.avatar_url
+    memberAvatar = member.avatar.url
     memberCreatedTimestamp = f'<t:{(member.created_at.timestamp()/1000).__floor__()}:F>'
     logChannel = client.get_channel(1040320903935967275)
     embed = discord.Embed(title="Member Joined", description=f"{member.mention} has joined the server!", color=0x00ff00)
