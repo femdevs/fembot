@@ -69,7 +69,7 @@ client.on('interactionCreate', async interaction => {
 client.on('messageCreate', async message => {
     const prefix = '!';
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const args = message.content.replace('!', '').trim().split(' ');
     const command = args.shift().toLowerCase();
     switch (command) {
         case 'ping':
@@ -79,13 +79,18 @@ client.on('messageCreate', async message => {
             await message.reply('Commands: !help, !astolfo, !thebo, !thegoods');
             break;
         case 'alstolfo':
-            await message.reply('Take a guess');
+            const { astolfo } = require('./online_assets.json')
+            const selection = Math.floor(Math.random() * astolfo.length);
+            await message.reply(astolfo[selection]);
             break;
         case 'thebo':
-            await message.reply('The bo is a bo');
+            const { thebo } = require('./online_assets.json')
+            const selection2 = Math.floor(Math.random() * thebo.length);
+            await message.reply(thebo[selection2]);
             break;
         case 'thegoods':
-            await message.reply('The goods are good');
+            const file = new AttachmentBuilder(require('fs').readFileSync('./the_goods.mp3'));
+            await message.reply({files: [file]});
             break;
         default:
             break;
