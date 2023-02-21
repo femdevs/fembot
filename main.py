@@ -32,6 +32,8 @@ async def on_ready():
     
 @client.event
 async def on_message(message):
+    if message.author.bot:
+        return
     text = message.content.lower()
     if text.startswith("!"):
         command = text.replace("!", "").split()[0]
