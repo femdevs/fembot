@@ -17,6 +17,6 @@ jobs:
           password: sparty18Root
           port: 22
           script: | # npm up = install and update everything
-            cat dependencies.txt | pip install
+            cat dependency.txt | pip install
             python3 main.py
           
