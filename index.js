@@ -1,5 +1,4 @@
-const { Client, GatewayIntentBits, Partials, ActivityType } = require('discord.js');
-const { AttachmentBuilder } = require('discord.js');
+const { Client, Partials, AttachmentBuilder } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -25,16 +24,7 @@ const client = new Client({
         Partials.Message,
         Partials.Reaction,
         Partials.User
-    ],
-    presence: {
-        status: 'online',
-        activities: [
-            {
-                name: 'some absolute bangers',
-                type: ActivityType.Listening
-            }
-        ]
-    }
+    ]
 });
 
 client.on('interactionCreate', async interaction => {

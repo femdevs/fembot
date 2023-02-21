@@ -20,5 +20,6 @@ jobs:
             cd alexbot
             git pull
             npm up
+            node commands.js
             pm2 restart bot
           
