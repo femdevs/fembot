@@ -1,9 +1,5 @@
 import discord
 import random
-# dotenv
-from dotenv import load_dotenv
-import os
-load_dotenv()
 
 client = discord.Client(intents=discord.Intents.all())
 
@@ -50,4 +46,4 @@ async def on_message(message):
         await message.channel.send("Uwu, here you go! https://www.youtube.com/watch?v=UFG4FoqOBjY")
 
 
-client.run(process.env.TOKEN)
+client.run("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc")

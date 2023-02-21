@@ -19,6 +19,6 @@ jobs:
           script: | # npm up = install and update everything
             cd alexbot
             git pull
-            pip3 install -r dependency.txt
+            pip install -r dependency.txt
             python3 main.py
           
