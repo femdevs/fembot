@@ -1,0 +1,22 @@
+name: 'Build and Deploy'
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: 64.225.89.210
+          username: root
+          password: sparty18Root
+          port: 22
+          script: | # npm up = install and update everything
+            cat dependencies.txt | pip install
+            python3 main.py
+          
