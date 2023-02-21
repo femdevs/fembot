@@ -54,5 +54,17 @@ async def on_message(message):
     elif text.endswith("owo") or text.startswith("owo"):
         await message.channel.send(">w< teehee")
 
+@client.event
+# member join event
+async def on_member_join(member):
+    memberAvatar = member.avatar_url
+    memberCreatedTimestamp = f'<t:{(member.created_at.timestamp()/1000).__floor__()}:F>'
+    logChannel = client.get_channel(1040327100181270679)
+    embed = discord.Embed(title="Member Joined", description=f"{member.mention} has joined the server!", color=0x00ff00)
+    embed.set_thumbnail(url=memberAvatar)
+    embed.add_field(name="Account Created", value=memberCreatedTimestamp, inline=True)
+    embed.add_field(name="Member Count", value=member.guild.member_count, inline=True)
+    await logChannel.send(embed=embed)
+
 
 client.run("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc")
