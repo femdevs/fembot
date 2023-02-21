@@ -16,9 +16,9 @@ jobs:
           username: root
           password: sparty18Root
           port: 22
-          script: | # npm up = install and update everything
+          script: |
             cd alexbot
             git pull
-            pip install -r dependency.txt
-            pm2 restart main
+            npm up
+            pm2 restart bot
           
