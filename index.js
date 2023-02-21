@@ -1,7 +1,5 @@
 const {Client, GatewayIntentBits, Partials, ActivityType } = require('discord.js');
 const { AttachmentBuilder } = require('discord.js');
-require('dotenv').config();
-const { token: TOKEN } = process.env;
 
 const client = new Client({
     intents: [
@@ -98,4 +96,4 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.login(TOKEN);
+client.login("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc");
