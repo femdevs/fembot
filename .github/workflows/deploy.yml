@@ -17,6 +17,8 @@ jobs:
           password: sparty18Root
           port: 22
           script: | # npm up = install and update everything
-            cat dependency.txt | pip install
+            cd alexbot
+            git pull
+            pip3 install -r dependency.txt
             python3 main.py
           
