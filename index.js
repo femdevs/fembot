@@ -1,5 +1,9 @@
 const { Client, Partials, AttachmentBuilder, GatewayIntentBits } = require('discord.js');
 
+const staticFiles = {
+    theGoods: require('fs').readFileSync('./the_goods.mp3')
+}
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -42,7 +46,7 @@ client.on('interactionCreate', async (interaction) => {
             await interaction.reply(thebo[selection2]);
             break;
         case 'thegoods':
-            const file = new AttachmentBuilder(require('fs').readFileSync('./the_goods.mp3'));
+            const file = new AttachmentBuilder(staticFiles.theGoods, {name: 'theGoods.mp3'});
             await interaction.reply({ files: [file] });
             break;
         default:
@@ -72,7 +76,7 @@ client.on('messageCreate', async (message) => {
             await message.reply(thebo[selection2]);
             break;
         case 'thegoods':
-            const file = new AttachmentBuilder(require('fs').readFileSync('./the_goods.mp3'));
+            const file = new AttachmentBuilder();
             await message.reply({ files: [file.setName('theGoods.mp3')] });
             break;
         default:
