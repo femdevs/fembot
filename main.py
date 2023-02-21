@@ -34,16 +34,17 @@ async def on_ready():
 async def on_message(message):
     text = message.content.lower()
     if text.startswith("!"):
-        match text.split()[0]:
-            case "!help":
+        command = text.replace("!", "").split()[0]
+        match command:
+            case "help":
                 await message.channel.send("Commands: !help, !astolfo, !thebo, !thegoods")
-            case "!astolfo":
+            case "astolfo":
                 random_image_link = random.choice(image_links)
                 await message.channel.send(random_image_link)
-            case "!thebo":
+            case "thebo":
                 random_thebo_link = random.choice(thebo_links)
                 await message.channel.send(random_thebo_link)
-            case "!thegoods":
+            case "thegoods":
                 await message.channel.send("Uwu, here you go! https://www.youtube.com/watch?v=UFG4FoqOBjY")
     
     elif text.endswith("uwu") or text.startswith("uwu"):
