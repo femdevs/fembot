@@ -47,11 +47,12 @@ async def on_message(message):
                 random_thebo_link = random.choice(thebo_links)
                 await message.channel.send(random_thebo_link)
             case "thegoods":
-                await message.channel.send("Uwu, here you go! https://www.youtube.com/watch?v=UFG4FoqOBjY")
+                await message.channel.send(content="Uwu, here you go!", file=discord.File(filename="the_goods.mp3", fp="the_goods.mp3"))
     
     elif text.endswith("uwu") or text.startswith("uwu"):
         await message.channel.send("rawr :3")
     elif text.endswith("owo") or text.startswith("owo"):
         await message.channel.send(">w< teehee")
+
 
 client.run("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc")
