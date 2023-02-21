@@ -59,7 +59,7 @@ async def on_message(message):
 async def on_member_join(member):
     memberAvatar = member.avatar_url
     memberCreatedTimestamp = f'<t:{(member.created_at.timestamp()/1000).__floor__()}:F>'
-    logChannel = client.get_channel(1040327100181270679)
+    logChannel = client.get_channel(1040320903935967275)
     embed = discord.Embed(title="Member Joined", description=f"{member.mention} has joined the server!", color=0x00ff00)
     embed.set_thumbnail(url=memberAvatar)
     embed.add_field(name="Account Created", value=memberCreatedTimestamp, inline=True)
