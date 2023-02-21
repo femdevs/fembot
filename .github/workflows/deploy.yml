@@ -20,5 +20,5 @@ jobs:
             cd alexbot
             git pull
             pip install -r dependency.txt
-            python3 main.py
+            pm2 restart main
           
