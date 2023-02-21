@@ -32,17 +32,17 @@ async def on_ready():
     
 @client.event
 async def on_message(message):
-    if message.content..lower().startswith("!astolfo"):
+    if message.content.startswith("!astolfo"):
         random_image_link = random.choice(image_links)
         await message.channel.send(random_image_link)
-    elif message.content.lower().startswith("!thebo"):
+    elif message.content.startswith("!thebo"):
         random_thebo_link = random.choice(thebo_links)
         await message.channel.send(random_thebo_link)
-    elif message.content.lower().endswith("uwu") or message.content.lower().startswith("uwu"):
+    elif message.content.endswith("uwu") or message.content.startswith("uwu"):
         await message.channel.send("rawr :3")
-    elif message.content.lower().endswith("owo") or message.content.lower().startswith("owo"):
+    elif message.content.endswith("owo") or message.content.startswith("owo"):
         await message.channel.send(">w< teehee")
-    elif message.content.lower().startswith("!thegoods"):
+    elif message.content.startswith("!thegoods"):
         await message.channel.send("Uwu, here you go! https://www.youtube.com/watch?v=UFG4FoqOBjY")
 
 
