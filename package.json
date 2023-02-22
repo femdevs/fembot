@@ -5,6 +5,7 @@
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "nodemon": "^2.0.20",
+    "rereddit": "^1.0.0",
     "uuid": "^9.0.0"
   },
   "name": "fembot",
