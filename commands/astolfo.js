@@ -3,7 +3,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('@discordjs/builders');
 module.exports = {
     name: 'alstolfo',
     data: new SlashCommandBuilder()
-        .setName('alstolfo')
+        .setName('astolfo')
         .setDescription('Take a guess'),
     async execute(client, interaction) {
         // get a random pic from r/astolfo using the fetch API

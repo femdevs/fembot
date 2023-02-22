@@ -48,10 +48,20 @@ module.exports = {
             case 'help':
                 await message.reply('Commands: !help, !astolfo, !thebo, !thegoods');
                 break;
-            case 'alstolfo':
-                const { astolfo } = require('../online_assets.json')
-                const selection = Math.floor(Math.random() * astolfo.length) - 1;
-                await message.reply(astolfo[selection]);
+            case 'astolfo':
+                await fetch('https://www.reddit.com/r/astolfo/random/.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const validLinks = data.data.children.filter(post => post.data.post_hint == 'image');
+                        const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
+                        const embed = new EmbedBuilder()
+                            .setTitle(randomLink.data.title)
+                            .setURL(randomLink.data.url)
+                            .setImage(randomLink.data.url)
+                            .setTimestamp()
+
+                        message.reply({ embeds: [embed] });
+                    })
                 break;
             case 'thebo':
                 const { thebo } = require('../online_assets.json')
@@ -59,7 +69,7 @@ module.exports = {
                 await message.reply(thebo[selection2]);
                 break;
             case 'thegoods':
-                const file = new AttachmentBuilder(AttachmentBuilder(client.sfiles.theGoods, {name: 'theGoods.mp3'}));
+                const file = new AttachmentBuilder(AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' }));
                 await message.reply({ files: [file.setName('theGoods.mp3')] });
                 break;
             default:
