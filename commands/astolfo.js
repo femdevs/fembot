@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('@discordjs/builders');
 
 module.exports = {
-    name: 'alstolfo',
+    name: 'astolfo',
     data: new SlashCommandBuilder()
         .setName('astolfo')
         .setDescription('Take a guess'),
