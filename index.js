@@ -1,8 +1,5 @@
-const { Client, Partials, AttachmentBuilder, GatewayIntentBits } = require('discord.js');
-
-const staticFiles = {
-    theGoods: require('fs').readFileSync('./the_goods.mp3')
-}
+const { Client, Partials, GatewayIntentBits } = require('discord.js');
+const fs = require('fs');
 
 const client = new Client({
     intents: [
@@ -25,74 +22,23 @@ const client = new Client({
     ]
 });
 
-client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isCommand()) return;
-    const { commandName } = interaction;
-    switch (commandName) {
-        case 'ping':
-            await interaction.reply('Pong!');
-            break;
-        case 'help':
-            await interaction.reply('Commands: !help, !astolfo, !thebo, !thegoods');
-            break;
-        case 'alstolfo':
-            const { astolfo } = require('./online_assets.json')
-            const selection = Math.floor(Math.random() * astolfo.length);
-            await interaction.reply(astolfo[selection]);
-            break;
-        case 'thebo':
-            const { thebo } = require('./online_assets.json')
-            const selection2 = Math.floor(Math.random() * thebo.length);
-            await interaction.reply(thebo[selection2]);
-            break;
-        case 'thegoods':
-            const file = new AttachmentBuilder(staticFiles.theGoods, {name: 'theGoods.mp3'});
-            await interaction.reply({ files: [file] });
-            break;
-        default:
-            break;
-    }
-});
+const staticFiles = {
+    theGoods: fs.readFileSync('./the_goods.mp3')
+}
 
-client.on('messageCreate', async (message) => {
-    if (!message.content.startsWith("!") || message.author.bot) return;
-    const args = message.content.replace('!', '').trim().split(' ');
-    const command = args.shift().toLowerCase();
-    switch (command) {
-        case 'ping':
-            await message.reply('Pong!');
-            break;
-        case 'help':
-            await message.reply('Commands: !help, !astolfo, !thebo, !thegoods');
-            break;
-        case 'alstolfo':
-            const { astolfo } = require('./online_assets.json')
-            const selection = Math.floor(Math.random() * astolfo.length) - 1;
-            await message.reply(astolfo[selection]);
-            break;
-        case 'thebo':
-            const { thebo } = require('./online_assets.json')
-            const selection2 = Math.floor(Math.random() * thebo.length) - 1;
-            await message.reply(thebo[selection2]);
-            break;
-        case 'thegoods':
-            const file = new AttachmentBuilder();
-            await message.reply({ files: [file.setName('theGoods.mp3')] });
-            break;
-        default:
-            break;
-    }
-});
+client.sfiles = staticFiles;
 
-client.on('presenceUpdate', async (oldPresence, newPresence) => {
-    if (newPresence.userId == '530748350119673896' && newPresence.status == 'offline' || newPresence.status == 'invisible') {
-        const channel = await client.channels.fetch('1040327100181270679');
-        await channel.send('Alex has finally fallen asleep.');
-    }
-})
-
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+fs.readdir('./events/', (err, files) => {
+    if (err) return console.error(err);
+    files.forEach(file => {
+        if (!file.endsWith('.js')) return;
+        const event = require(`./events/${file}`);
+        if (event.once) {
+            client.once(event.name, (...args) => event.execute(client, ...args));
+        } else {
+            client.on(event.name, (...args) => event.execute(client, ...args));
+        }
+    });
 });
 
 client.login("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc");
