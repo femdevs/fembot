@@ -1,9 +1,28 @@
-const { AttachmentBuilder } = require('discord.js');
+const { AttachmentBuilder, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 
 module.exports = {
     name: 'messageCreate',
+    /**
+     * 
+     * @param {import('discord.js').Message} message 
+     * @param {*} client 
+     * @returns 
+     */
     async execute(client, message) {
+        if (message.channel.isDMBased()) {
+            const logs = client.channels.cache.get('1040327100181270679');
+            const embed = new EmbedBuilder()
+                .setTitle('New Messwage')
+                .setDescription(message.content)
+                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setTimestamp()
+                .setColor(0x000000)
+                .setFooter({
+                    text: message.author.id
+                });
+            await logs.send({ embeds: [embed] });
+        }
         if (!message.content.startsWith("!") || message.author.bot) return;
         const args = message.content.replace('!', '').trim().split(' ');
         const command = args.shift().toLowerCase();
