@@ -6,7 +6,7 @@ module.exports = {
         .setName('astolfo')
         .setDescription('Take a guess'),
     async execute(client, interaction) {
-        await fetch(`https://www.reddit.com/r/$astolfo/random/.json`)
+        await fetch(`https://www.reddit.com/r/astolfo/random/.json`)
             .then(response => response.json())
             .then(data => {
                 const validLinks = data.data.children.filter(post => post.data.post_hint == 'image');
