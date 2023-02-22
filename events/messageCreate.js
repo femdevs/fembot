@@ -15,7 +15,10 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle('New Messwage')
                 .setDescription(message.content)
-                .setAuthor(message.author.tag, message.author.avatarURL())
+                .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.user.avatarURL
+                })
                 .setTimestamp()
                 .setColor(0x000000)
                 .setFooter({
