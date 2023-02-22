@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AttachmentBuilder } = require('discord.js');
 
 module.exports = {
+    name: 'thegoods',
     data: new SlashCommandBuilder()
         .setName('thegoods')
         .setDescription('Take a guess'),
