@@ -28,7 +28,7 @@ const staticFiles = {
 
 client.sfiles = staticFiles;
 
-fs.readdir('./events/', (err, files) => {
+fs.readdir('events', (err, files) => {
     if (err) return console.error(err);
     files.forEach(file => {
         if (!file.endsWith('.js')) return;
