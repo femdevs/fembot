@@ -6,7 +6,7 @@ const data = new SlashCommandBuilder()
     .setDescription('NSFW commands')
     .addSubcommand(subcommand =>
         subcommand
-            .setName('astolfo')
+            .setName('femboy')
             .setDescription('Take a guess'))
 data.nsfw = true;
 module.exports = {
@@ -21,9 +21,8 @@ module.exports = {
             password: "Bm156226"
         });
         switch (interaction.options.getSubcommand()) {
-            case 'astolfo':
-                const subreddit = (Math.ceil(Math.random() * 8) > 0) ? 'astolfor34' : 'astolfo';
-                await reddit.getSubreddit(subreddit).getRandomSubmission().then(post => {
+            case 'femboy':
+                await reddit.getSubreddit("r/femboyhentai").getRandomSubmission().then(post => {
                     interaction.reply(post.url);
                 })
                 break;
