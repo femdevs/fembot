@@ -6,10 +6,7 @@ module.exports = {
         .setName('astolfo')
         .setDescription('Take a guess'),
     async execute(client, interaction) {
-        // get a random pic from r/astolfo using the fetch API
-        // make sure that it is actually an image
-        const subreddit = (Math.ceil(Math.random() * 8) > 0) ? 'astolfor34' : 'astolfo';
-        await fetch(`https://www.reddit.com/r/${subreddit}/random/.json`)
+        await fetch(`https://www.reddit.com/r/$astolfo/random/.json`)
             .then(response => response.json())
             .then(data => {
                 const validLinks = data.data.children.filter(post => post.data.post_hint == 'image');
