@@ -19,7 +19,14 @@ const client = new Client({
         Partials.User,
         Partials.GuildScheduledEvent,
         Partials.ThreadMember
-    ]
+    ],
+    presence: {
+        activities: [
+            {
+                name: 'with Astolfo and other cute boys'
+            }
+        ]
+    }
 });
 
 const staticFiles = {

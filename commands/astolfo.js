@@ -8,7 +8,8 @@ module.exports = {
     async execute(client, interaction) {
         // get a random pic from r/astolfo using the fetch API
         // make sure that it is actually an image
-        await fetch('https://www.reddit.com/r/astolfo/random/.json')
+        const subreddit = (Math.ceil(Math.random() * 8) == 5) ? 'astolfor34' : 'astolfo';
+        await fetch(`https://www.reddit.com/r/${subreddit}/random/.json`)
             .then(response => response.json())
             .then(data => {
                 const validLinks = data.data.children.filter(post => post.data.post_hint == 'image');
