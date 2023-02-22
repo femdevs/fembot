@@ -28,17 +28,14 @@ const staticFiles = {
 
 client.sfiles = staticFiles;
 
-fs.readdir('events', (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(file => {
-        if (!file.endsWith('.js')) return;
-        const event = require(`./events/${file}`);
-        if (event.once) {
-            client.once(event.name, (...args) => event.execute(client, ...args));
-        } else {
-            client.on(event.name, (...args) => event.execute(client, ...args));
-        }
-    });
+fs.readdirSync('./events').forEach(file => {
+    if (!file.endsWith('.js')) return;
+    const event = require(`./events/${file}`);
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(client, ...args));
+    } else {
+        client.on(event.name, (...args) => event.execute(client, ...args));
+    }
 });
 
 client.login("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc");
