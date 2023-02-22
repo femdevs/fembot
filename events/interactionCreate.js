@@ -6,11 +6,16 @@ module.exports = {
     async execute(client, interaction) {
         if (!interaction.isCommand()) return;
         const { commandName } = interaction;
-        fs.readdirSync('../commands').forEach(file => {
+        fs.readdirSync(process.cwd() + '/commands').forEach(async file => {
             if (!file.endsWith('.js')) return;
-            const command = require(`../commands/${file}`);
+            const command = await require(`../commands/${file}`);
             if (commandName === command.name) {
-                command.execute(client, interaction);
+                try {
+                    await command.execute(client, interaction);
+                } catch (error) {
+                    interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+                    console.error(error);
+                }
                 return
             }
         })
