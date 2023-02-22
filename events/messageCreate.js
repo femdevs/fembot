@@ -6,7 +6,7 @@ module.exports = {
     /**
      * 
      * @param {import('discord.js').Message} message 
-     * @param {*} client 
+     * @param {import('discord.js').Client} client 
      * @returns 
      */
     async execute(client, message) {
@@ -26,6 +26,16 @@ module.exports = {
                 });
             await logs.send({ embeds: [embed] });
         }
+        // detect if the message replies to the bot
+        if (message.mentions.has(client.user) && !message.content.includes(`${client.user}`)) {
+            if (message.embeds.length !== 1) return;
+            const embed = message.embeds[0];
+            const sendID = embed.footer.text;
+            const sendChannel = client.users.cache.get(sendID).dmChannel.send({
+                content: `UwU you have a new reply!\n\n>>>${message.content}`
+            })
+        }
+
         if (!message.content.startsWith("!") || message.author.bot) return;
         const args = message.content.replace('!', '').trim().split(' ');
         const command = args.shift().toLowerCase();
