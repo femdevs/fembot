@@ -22,9 +22,15 @@ module.exports = {
         });
         switch (interaction.options.getSubcommand()) {
             case 'femboy':
-                await reddit.getSubreddit("r/femboyhentai").getRandomSubmission().then(post => {
-                    interaction.reply(post.url);
+                const search = async _ => await reddit.getSubreddit("r/femboyhentai").getRandomSubmission().then(post => {
+                    const validExtensions = ['jpg', 'png', 'jpeg', 'gif'];
+                    if (validExtensions.includes(post.url.split('.').pop())) {
+                        interaction.reply({ content: post.url })
+                    } else {
+                        search()
+                    }
                 })
+                search()
                 break;
             }
     }

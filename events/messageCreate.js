@@ -31,7 +31,7 @@ module.exports = {
         if (message.mentions.has(client.user) && message.type == 19) {
             const originalMessage = await message.channel.messages.fetch(message.reference.messageId);
             if (originalMessage.embeds.length !== 1) return;
-            if (!originalMessage.embed.footer.text) return;
+            if (!originalMessage.embed.footer) return;
             const embed = originalMessage.embeds[0];
             const sendID = embed.footer.text;
             (await client.users.cache.get(sendID).createDM(true)).send({
