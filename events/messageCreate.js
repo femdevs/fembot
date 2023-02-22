@@ -11,6 +11,7 @@ module.exports = {
      */
     async execute(client, message) {
         if (message.channel.isDMBased()) {
+            if (message.author == client.user) return;
             const logs = client.channels.cache.get('1040327100181270679');
             const embed = new EmbedBuilder()
                 .setTitle('New Messwage')
@@ -27,12 +28,13 @@ module.exports = {
             await logs.send({ embeds: [embed] });
         }
         // detect if the message replies to the bot
-        if (message.mentions.has(client.user) && !message.content.includes(`${client.user}`)) {
-            if (message.embeds.length !== 1) return;
-            const embed = message.embeds[0];
+        if (message.mentions.has(client.user) && message.type == 19) {
+            const originalMessage = await message.channel.messages.fetch(message.reference.messageId);
+            if (originalMessage.embeds.length !== 1) return;
+            const embed = originalMessage.embeds[0];
             const sendID = embed.footer.text;
-            const sendChannel = client.users.cache.get(sendID).dmChannel.send({
-                content: `UwU you have a new reply!\n\n>>>${message.content}`
+            (await client.users.cache.get(sendID).createDM(true)).send({
+                content: `UwU you have a new reply!\n\n>>> ${message.content}`
             })
         }
 
