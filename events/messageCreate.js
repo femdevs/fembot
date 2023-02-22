@@ -17,7 +17,7 @@ module.exports = {
                 .setDescription(message.content)
                 .setAuthor({
                     name: message.author.tag,
-                    iconURL: message.user.avatarURL
+                    iconURL: message.author.avatarURL
                 })
                 .setTimestamp()
                 .setColor(0x000000)
