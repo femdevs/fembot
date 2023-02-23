@@ -29,14 +29,15 @@ module.exports = {
         }
         // detect if the message replies to the bot
         if (message.mentions.has(client.user) && message.type == 19) {
-            const originalMessage = await message.channel.messages.fetch(message.reference.messageId);
-            if (originalMessage.embeds.length !== 1) return;
-            if (!originalMessage.embed.footer) return;
-            const embed = originalMessage.embeds[0];
-            const sendID = embed.footer.text;
-            (await client.users.cache.get(sendID).createDM(true)).send({
-                content: `UwU you have a new reply!\n\n>>> ${message.content}`
-            })
+            await message.channel.messages.fetch(message.reference.messageId).then(async msg => {
+                if (msg.embeds.length !== 1) return;
+                if (!msg.embeds[0].footer) return;
+                const embed = msg.embeds[0];
+                const sendID = embed.footer.text;
+                (await client.users.cache.get(sendID).createDM(true)).send({
+                    content: `UwU you have a new reply!\n\n>>> ${message.content}`
+                })
+            });
         }
 
         if (!message.content.startsWith("!") || message.author.bot) return;
