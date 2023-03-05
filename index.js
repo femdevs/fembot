@@ -37,10 +37,10 @@ const staticFiles = {
 client.sfiles = staticFiles;
 
 const connection = mysql.createConnection({
-    host: 'db.sparty18.com',
+    host: 'sparty18.com',
     user: 'benpai',
-    password: 'AVNS__2BVPt3oiqjOaWDRnBX',
-    database: 'alexbot',
+    password: 'benpaiIsCool',
+    database: 'fembot',
     ssl: {
         ca: fs.readFileSync(process.cwd() + `..\\BenpaiBot\\assets\\ca-certificate.crt`)
     }
