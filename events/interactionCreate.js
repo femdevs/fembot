@@ -18,12 +18,12 @@ module.exports = {
                 });
             }
         });
-        fs.readdirSync(process.cwd() + '/commands').forEach(async file => {
+        fs.readdirSync(process.cwd() + '/commands').forEach(file => {
             if (!file.endsWith('.js')) return;
-            const command = await require(`../commands/${file}`);
+            const command = require(`../commands/${file}`);
             if (commandName === command.name) {
                 try {
-                    await command.execute(client, interaction);
+                    command.execute(client, interaction);
                 } catch (error) {
                     interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
                     console.error(error);

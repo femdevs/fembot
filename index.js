@@ -41,9 +41,6 @@ const connection = mysql.createConnection({
     user: 'benpai',
     password: 'benpaiIsCool',
     database: 'fembot',
-    ssl: {
-        ca: fs.readFileSync(process.cwd() + `..\\BenpaiBot\\assets\\ca-certificate.crt`)
-    }
 });
 
 client.db = connection;
@@ -57,17 +54,5 @@ fs.readdirSync('./events').forEach(file => {
         client.on(event.name, (...args) => event.execute(client, ...args));
     }
 });
-
-connection.query(`SELECT * FROM servers`, (err, rows) => {
-    if (err) throw err;
-    rows.forEach(row => {
-        const guild = client.guilds.cache.get(row.guildId);
-        const interval = row.meowSpeed;
-        const channel = guild.channels.cache.get(row.meowChannelId);
-        setInterval(() => {
-            channel.send('Meow!');
-        }, interval);
-    });
-})
 
 client.login("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc");
