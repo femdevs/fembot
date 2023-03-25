@@ -75,4 +75,4 @@ rest.put(Routes.applicationCommands('1077240311874596945'), { body: commands })
     .then(_ => console.log('Successfully registered Global application commands.'))
     .catch(console.error);
 
-client.login("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GjWHG6.AHw0X_nN83s1sqcA2jB0Sga6qCe7XigTrnxSOs");
+client.login("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GX_IUY.HFlq26pRU2_eUDKhaxpYazE-w9spYMLLSQhtFE");
