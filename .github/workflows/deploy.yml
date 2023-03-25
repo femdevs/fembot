@@ -20,6 +20,5 @@ jobs:
             cd alexbot
             git pull
             npm up
-            node commands
-            pm2 restart 2
+            pm2 restart index.js
           
