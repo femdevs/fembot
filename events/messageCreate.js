@@ -11,7 +11,7 @@ module.exports = {
     async execute(client, message) {
         if (message.channel.isDMBased()) {
             if (message.author == client.user) return;
-            const logs = client.channels.cache.get('1078316572797567196');
+            const logs = client.channels.cache.get('1078742960197357658');
             const embed = new EmbedBuilder()
                 .setTitle('New Messwage')
                 .setDescription(message.content)
