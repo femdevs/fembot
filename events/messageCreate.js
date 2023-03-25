@@ -70,8 +70,8 @@ module.exports = {
                 await message.reply(thebo[selection2]);
                 break;
             case 'thegoods':
-                const file = new AttachmentBuilder(AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' }));
-                await message.reply({ files: [file.setName('theGoods.mp3')] });
+                const file = new AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' });
+                await message.reply({ files: [file] });
                 break;
             default:
                 break;
