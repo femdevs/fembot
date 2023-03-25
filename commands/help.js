@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('@discordjs/builders');
-const { Embed } = require('discord.js');
 
 module.exports = {
     name: 'help',
@@ -23,12 +22,3 @@ module.exports = {
         await interaction.reply({embeds: [embed] });
     }
 }
-
-
-/*
-const embed = new EmbedBuilder()
-    .setTitle(randomLink.data.title)
-    .setURL(randomLink.data.url)
-    .setImage(randomLink.data.url)
-    .setTimestamp()
-*/
