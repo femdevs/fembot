@@ -8,6 +8,6 @@ module.exports = {
         .setDescription('Take a guess'),
     async execute(client, interaction) {
         const file = new AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' });
-        await interaction.reply({  content: 'Credit: Benpai', files: [file] });
+        await interaction.reply({ content: 'Credit: Benpai', files: [file] });
     }
 }
