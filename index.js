@@ -1,8 +1,10 @@
 const { Client, Partials, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
-const mysql = require('mysql2');
 const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
+
+require('dotenv').config();
+const { TOKEN: token } = process.env;
 
 const client = new Client({
     intents: [
@@ -47,32 +49,29 @@ client.sfiles = staticFiles;
 
 // client.db = connection;
 
-fs.readdirSync('./events').forEach(file => {
-    if (!file.endsWith('.js')) return;
-    const event = require(`./events/${file}`);
-    if (event.once) {
-        client.once(event.name, (...args) => event.execute(client, ...args));
-    } else {
-        client.on(event.name, (...args) => event.execute(client, ...args));
-    }
-});
+fs
+    .readdirSync('./events')
+    .filter(file => file.endsWith('.js'))
+    .forEach(file => {
+        const event = require(`./events/${file}`);
+        if (event.once) {
+            client.once(event.name, (...args) => event.execute(client, ...args));
+        } else {
+            client.on(event.name, (...args) => event.execute(client, ...args));
+        }
+    });
 
-const commands = [];
-
-const commandFiles = fs
+const commands = fs
     .readdirSync('./commands')
-    .filter(file => file.endsWith('.js'));
+    .filter(file => file.endsWith('.js'))
+    .map(file => {
+        const command = require(`./commands/${file}`)
+        console.log(`Registering command ${command.data.name}`)
+        return command.data.toJSON()
+    })
 
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`)
-    console.log(`Registering command ${command.data.name}`)
-    commands.push(command.data.toJSON())
-};
-
-const rest = new REST({ version: '10' }).setToken("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GLnGUD.ssM6dK_yhvm_v55yaUtCHsqqhHZaR8HIQ98dIc");
-
-rest.put(Routes.applicationCommands('1077240311874596945'), { body: commands })
+new REST({ version: '10' }).setToken(token).put(Routes.applicationCommands('1077240311874596945'), { body: commands })
     .then(_ => console.log('Successfully registered Global application commands.'))
     .catch(console.error);
 
-client.login("MTA3NzI0MDMxMTg3NDU5Njk0NQ.GX_IUY.HFlq26pRU2_eUDKhaxpYazE-w9spYMLLSQhtFE");
+client.login(token);
