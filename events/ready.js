@@ -30,7 +30,7 @@ module.exports = {
         console.log()
         console.log(chalk`Users: {underline {bold {blue ${stats.users}}}}`);
         console.log()
-        console.log(chalk`Loged In as {underline {bold {blue ${stats.name}}}}`);
+        console.log(chalk`Logged In as {underline {bold {blue ${stats.name}}}}`);
         client.user.setPresence({
             activities: [
                 {
