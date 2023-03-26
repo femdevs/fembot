@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'about',
@@ -6,6 +6,8 @@ module.exports = {
         .setName('about')
         .setDescription('About the bot'),
     async execute(client, interaction) {
-        await interaction.reply('Pong!');
+        const embed = new EmbedBuilder()
+            .setTitle('About the bot')
+            .setDescription
     }
 }
