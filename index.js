@@ -2,7 +2,7 @@ const { Client, Partials, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
-
+const chalk = require('chalk')
 require('dotenv').config();
 const { TOKEN: token } = process.env;
 
@@ -54,6 +54,7 @@ fs
     .filter(file => file.endsWith('.js'))
     .forEach(file => {
         const event = require(`./events/${file}`);
+        console.log(chalk.bold`Registering {blue event} {red {underline ${event.name}}}`);
         if (event.once) {
             client.once(event.name, (...args) => event.execute(client, ...args));
         } else {
@@ -61,17 +62,19 @@ fs
         }
     });
 
+console.log(chalk.bold`------`)
+
 const commands = fs
     .readdirSync('./commands')
     .filter(file => file.endsWith('.js'))
     .map(file => {
         const command = require(`./commands/${file}`)
-        console.log(`Registering command ${command.data.name}`)
+        console.log(chalk.bold`Registering {blue command} {red {underline ${command.data.name}}}`)
         return command.data.toJSON()
-    })
+    });
 
 new REST({ version: '10' }).setToken(token).put(Routes.applicationCommands('1077240311874596945'), { body: commands })
-    .then(_ => console.log('Successfully registered Global application commands.'))
+    .then(_ => console.log(chalk.green`Successfully registered {bold {underline {red ${commands.length}}}} application commands.`))
     .catch(console.error);
 
 client.login(token);
