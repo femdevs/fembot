@@ -18,7 +18,7 @@ module.exports = {
                 {name: 'stats', value: 'See how many commands you\'ve run.'},
                 {name: 'thegoods', value: 'Furry.'},
             )
-            .setColor(255, 255, 255)
+            .setColor(0xffffff);
         await interaction.reply({embeds: [embed] });
     }
 }
