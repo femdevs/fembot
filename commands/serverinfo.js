@@ -13,7 +13,7 @@ module.exports = {
                 {name: 'Members', value: `${interaction.guild.memberCount}`, inline: true},
                 {name: 'Channels', value: `${interaction.guild.channels.cache.size}`, inline: true},
                 {name: 'Roles', value: `${interaction.guild.roles.cache.size}`, inline: true},
-                {name: 'Created At', value: `${interaction.guild.createdAt}`, inline: true},
+                {name: 'Created At', value: `${interaction.guild.createdAt}`, inline: true},  // TODO: format date
                 {name: 'Emojis', value: `${interaction.guild.emojis.cache.size}`, inline: true},
             )
             .setColor(0xa331d4)
