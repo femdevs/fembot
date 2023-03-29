@@ -12,6 +12,10 @@ module.exports = {
         if (message.channel.isDMBased()) {
             if (message.author == client.user) return;
             const logs = client.channels.cache.get('1078742960197357658');
+            const files = []
+            for (const attachment of message.attachments.values()) {
+                files.push(new AttachmentBuilder(attachment.url));
+            }
             const embed = new EmbedBuilder()
                 .setTitle('New Messwage')
                 .setDescription(message.content)
@@ -24,17 +28,22 @@ module.exports = {
                 .setFooter({
                     text: message.author.id
                 });
-            await logs.send({ embeds: [embed] });
+            await logs.send({ embeds: [embed], files, });
         }
         // detect if the message replies to the bot
         if (message.mentions.has(client.user) && message.type == 19) {
             await message.channel.messages.fetch(message.reference.messageId).then(async msg => {
                 if (msg.embeds.length !== 1) return;
                 if (!msg.embeds[0].footer) return;
+                const files = []
+                for (const attachment of message.attachments.values()) {
+                    files.push(new AttachmentBuilder(attachment.url));
+                }
                 const embed = msg.embeds[0];
                 const sendID = embed.footer.text;
                 (await client.users.cache.get(sendID).createDM(true)).send({
-                    content: `UwU you have a new reply!\n\n>>> ${message.content}`
+                    content: `UwU you have a new reply!\n\n>>> ${message.content}`,
+                    files,
                 })
             });
         }
