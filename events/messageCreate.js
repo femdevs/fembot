@@ -31,7 +31,7 @@ module.exports = {
             await logs.send({ embeds: [embed], files, });
         }
         // detect if the message replies to the bot
-        if (message.mentions.has(client.user) && message.type == 19) {
+        if (message.mentions.has(client.user) && message.type == 19 && message.channel.id === '1078742960197357658') {
             await message.channel.messages.fetch(message.reference.messageId).then(async msg => {
                 if (msg.embeds.length !== 1) return;
                 if (!msg.embeds[0].footer) return;
