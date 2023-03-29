@@ -49,6 +49,9 @@ client.sfiles = staticFiles;
 
 // client.db = connection;
 
+const Utils = require('./functions/helperFunctions')
+client.Utils = Utils;
+
 fs
     .readdirSync('./events')
     .filter(file => file.endsWith('.js'))

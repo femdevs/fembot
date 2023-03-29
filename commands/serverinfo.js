@@ -24,7 +24,7 @@ module.exports = {
                 stage: interaction.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildStageVoice).size,
             },
             guildRoles: interaction.guild.roles.cache.size,
-            guildCreatedAt: interaction.guild.createdAt,
+            guildCreatedAt: interaction.guild.createdTimestamp,
             guildEmojis: {
                 total: interaction.guild.emojis.cache.size,
                 animated: interaction.guild.emojis.cache.filter(emoji => emoji.animated).size,
@@ -57,7 +57,7 @@ module.exports = {
                 },
                 {
                     name: 'Created At',
-                    value: data.guildCreatedAt.toString(),
+                    value: `<t:${client.Utils.Time.unixTime(data.guildCreatedAt)}:F>`,
                 },
             )
             .setColor(0xa331d4)
