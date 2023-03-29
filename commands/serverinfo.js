@@ -9,7 +9,7 @@ module.exports = {
         const data = {
             guildId: interaction.guild.id,
             guildName: interaction.guild.name,
-            guildOwner: client.users.cache.get(interaction.guild.ownerId),
+            guildOwner: (await interaction.guild.fetchOwner()),
             guildMembers: {
                 total: interaction.guild.memberCount,
                 bots: interaction.guild.members.cache.filter(member => member.user.bot).size,
@@ -34,10 +34,11 @@ module.exports = {
         }
         const embed = new EmbedBuilder()
             .setTitle(`Info for ${interaction.guild.name}`)
-            .addFields({
-                name: 'Owner',
-                value: data.guildOwner.toString(),
-            },
+            .addFields(
+                {
+                    name: 'Owner',
+                    value: data.guildOwner.toString(),
+                },
                 {
                     name: 'Members',
                     value: `Total: ${data.guildMembers.total}\nBots: ${data.guildMembers.bots}\nHumans: ${data.guildMembers.humans}`,
