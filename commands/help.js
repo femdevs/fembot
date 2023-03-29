@@ -4,7 +4,7 @@ module.exports = {
     name: 'help',
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Take a guess'),
+        .setDescription('Receive a list of commands and their descriptions'),
     async execute(client, interaction) {
         const embed = new EmbedBuilder()
             .setTitle('Help')

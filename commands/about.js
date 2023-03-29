@@ -4,7 +4,7 @@ module.exports = {
     name: 'about',
     data: new SlashCommandBuilder()
         .setName('about')
-        .setDescription('About the bot'),
+        .setDescription('Get info about the bot'),
     async execute(client, interaction) {
         const imageURL = "https://cdn.discordapp.com/attachments/1078326760539684864/1089361508196159609/IMG_2351.png" // Developer Note: I typed this out by hand. Stupid school blocks Discord.
         const embed = new EmbedBuilder()

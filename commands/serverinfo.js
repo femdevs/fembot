@@ -48,7 +48,7 @@ module.exports = {
                 },
                 {
                     name: 'Roles',
-                    value: data.guildRoles,
+                    value: data.guildRoles.toString(),
                 },
                 {
                     name: 'Emojis',
@@ -56,7 +56,7 @@ module.exports = {
                 },
                 {
                     name: 'Created At',
-                    value: data.guildCreatedAt,
+                    value: data.guildCreatedAt.toString(),
                 },
             )
             .setColor(0xa331d4)
