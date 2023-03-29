@@ -38,15 +38,15 @@ class Timer {
     static elapsedTime = (timestamp) => {
         if (isNaN(timestamp)) throw TypeError("Timestamp must be a number")
         const time = {
-            year: Math.floor(Math.floor(timestamp) / 1000 / 60 / 60 / 24 / 30 / 12),
-            month: Math.floor(Math.floor(timestamp) / 1000 / 60 / 60 / 24 / 30) % 12,
-            day: Math.floor(Math.floor(timestamp) / 1000 / 60 / 60 / 24) % 30,
-            hour: Math.floor(Math.floor(timestamp) / 1000 / 60 / 60) % 24,
-            minute: Math.floor(Math.floor(timestamp) / 1000 / 60) % 60,
-            second: Math.floor(Math.floor(timestamp) / 1000) % 60,
-            millisecond: Math.floor(timestamp) % 1000
+            year: Math.floor(Math.floor(timestamp) / 60 / 60 / 24 / 30 / 12),
+            month: Math.floor(Math.floor(timestamp) / 60 / 60 / 24 / 30) % 12,
+            day: Math.floor(Math.floor(timestamp) / 60 / 60 / 24) % 30,
+            hour: Math.floor(Math.floor(timestamp) / 60 / 60) % 24,
+            minute: Math.floor(Math.floor(timestamp) / 60) % 60,
+            second: Math.floor(Math.floor(timestamp)) % 60,
         }
-        return [time.year, time.month, time.day, time.hour, time.minute, time.second, time.millisecond]
+        
+        return [time.year, time.month, time.day, time.hour, time.minute, time.second]
             .map((value, index) => {
                 if (value === 0) return ''
                 if (value === 1) {
@@ -57,7 +57,6 @@ class Timer {
                         case 3: return `${value} hour`;
                         case 4: return `${value} minute`;
                         case 5: return `${value} second`;
-                        case 6: return `${value} millisecond`;
                     }
                 } else {
                     switch (index) {
@@ -67,7 +66,6 @@ class Timer {
                         case 3: return `${value} hours`;
                         case 4: return `${value} minutes`;
                         case 5: return `${value} seconds`;
-                        case 6: return `${value} milliseconds`;
                     }
                 }
             })
