@@ -18,7 +18,7 @@ module.exports = {
             }
             const embed = new EmbedBuilder()
                 .setTitle('New Messwage')
-                .setDescription(message.content)
+                .setDescription(message.content || 'No Content')
                 .setAuthor({
                     name: message.author.tag,
                     iconURL: message.author.avatarURL({ size: 256 })
@@ -42,7 +42,7 @@ module.exports = {
                 const embed = msg.embeds[0];
                 const sendID = embed.footer.text;
                 (await client.users.cache.get(sendID).createDM(true)).send({
-                    content: `UwU you have a new reply!\n\n>>> ${message.content}`,
+                    content: `UwU you have a new reply!\n\n>>> ${message.content || '(No content was given)'}`,
                     files,
                 })
             });
