@@ -12,14 +12,14 @@ module.exports = {
         .addStringOption(option => 
             option.setName('content')
                 .setDescription('Text that should be in the announcement.')
-                .setRequired(true)),
+                .setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers | PermissionFlagsBits.SendMessages),
         /* 
         addAttachmentOption(option =>
             option.setName('attachment')
                 .setDescription('Attach media content to go with the annoncement.')
                 .setRequired(false))
-        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers | PermissionFlagsBits.SendMessages),
-        */
+                */
 
     async execute(client, interaction) {
         const channel = interaction.options.getChannel('channel');
