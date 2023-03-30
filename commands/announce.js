@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
     name: 'announce',
@@ -12,13 +12,19 @@ module.exports = {
         .addStringOption(option => 
             option.setName('content')
                 .setDescription('Text that should be in the announcement.')
-                .setRequired(true))
+                .setRequired(true)),
+        /* 
+        addAttachmentOption(option =>
+            option.setName('attachment')
+                .setDescription('Attach media content to go with the annoncement.')
+                .setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers | PermissionFlagsBits.SendMessages),
+        */
 
     async execute(client, interaction) {
         const channel = interaction.options.getChannel('channel');
         const content = interaction.options.getString('content');
-        const intUserId = await interaction.guild.members.fetch(interaction.user.id)
+        // const image = interaction.options.getAttachment('attachment')
 
         const announcementEmbed = new EmbedBuilder()
         .setTitle('New announcement')
