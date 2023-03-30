@@ -13,18 +13,15 @@ module.exports = {
             option.setName('content')
                 .setDescription('Text that should be in the announcement.')
                 .setRequired(true))
+        .addBooleanOption(option => 
+            option.setName('mention')
+                .setDescription('Choose whether to mention everyone in the guild (yes/no).'))
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers | PermissionFlagsBits.SendMessages),
-        /* 
-        addAttachmentOption(option =>
-            option.setName('attachment')
-                .setDescription('Attach media content to go with the annoncement.')
-                .setRequired(false))
-                */
 
     async execute(client, interaction) {
         const channel = interaction.options.getChannel('channel');
         const content = interaction.options.getString('content');
-        // const image = interaction.options.getAttachment('attachment')
+        const mention = interaction.options.getBoolean('mention');
 
         const announcementEmbed = new EmbedBuilder()
         .setTitle('New announcement')
@@ -39,7 +36,12 @@ module.exports = {
             .setDescription(`**Announcement sent in ${channel}!**`)
             .setColor(0x2ed95b);
 
-        await channel.send({embeds: [announcementEmbed]});
+        if (mention === true) {
+            const ping = '@everyone';
+            await channel.send({embeds: [announcementEmbed], content: ping});
+        } else {
+            await channel.send({embeds: [announcementEmbed]});
+        }
         await interaction.reply({embeds: [confirmationEmbed], ephemeral: true});
     }
 }
