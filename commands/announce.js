@@ -1,25 +1,39 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
     name: 'announce',
     data: new SlashCommandBuilder()
         .setName('announce')
         .setDescription('Make an announcement using the bot.')
-        .addStringOption(option => 
-            option.setName('announcement')
-                .setDescription('Text that should be in the announcement.')
-                .setRequired(true))
         .addChannelOption(option =>
             option.setName('channel')
                 .setDescription('The channel to send the announcement in.')
                 .setRequired(true))
+        .addStringOption(option => 
+            option.setName('content')
+                .setDescription('Text that should be in the announcement.')
+                .setRequired(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers | PermissionFlagsBits.SendMessages),
-        
+
     async execute(client, interaction) {
         const channel = interaction.options.getChannel('channel');
-        const announcement = interaction.options.getString('announcement');
+        const content = interaction.options.getString('content');
+        const intUserId = await interaction.guild.members.fetch(interaction.user.id)
 
-        await interaction.reply({content: `Message sent in ${channel}`, ephemeral: true})
-        await channel.send(announcement);
+        const announcementEmbed = new EmbedBuilder()
+        .setTitle('New announcement')
+        .setDescription(content)
+        .setAuthor({
+            name: `Sent by ${interaction.user.username}`,
+            iconURL: interaction.user.displayAvatarURL()
+        })
+        .setColor(0xe31e35);
+        
+        const confirmationEmbed = new EmbedBuilder()
+            .setDescription(`**Announcement sent in ${channel}!**`)
+            .setColor(0x2ed95b);
+
+        await channel.send({embeds: [announcementEmbed]});
+        await interaction.reply({embeds: [confirmationEmbed], ephemeral: true});
     }
 }
