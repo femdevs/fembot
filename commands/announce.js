@@ -2,6 +2,11 @@ const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, PermissionFlagsBit
 
 module.exports = {
     name: 'announce',
+    type: {
+        command: true,
+        text: true
+    },
+    triggers: ['announce'],
     data: new SlashCommandBuilder()
         .setName('announce')
         .setDescription('Make an announcement using the bot.')
@@ -48,5 +53,20 @@ module.exports = {
 
         await channel.send({ embeds: [announcementEmbed], files: [attachment] });
         await interaction.reply({ embeds: [confirmationEmbed], ephemeral: true });
+    },
+    async messageExecute(client, message) {
+        const { channel, attachments: files } = message;
+        const content = message.content.slice(message.content.indexOf(' ') + 1);
+
+        const announcementEmbed = new EmbedBuilder()
+            .setTitle('New announcement')
+            .setDescription(content)
+            .setAuthor({
+                name: `Sent by ${message.author.username}`,
+                iconURL: message.author.displayAvatarURL()
+            })
+            .setColor(0xe31e35);
+
+        await channel.send({ embeds: [announcementEmbed], files });
     }
 }

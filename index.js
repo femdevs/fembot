@@ -5,6 +5,7 @@ const { Routes } = require('discord-api-types/v10');
 const chalk = require('chalk')
 require('dotenv').config();
 const { TOKEN: token } = process.env;
+const checkPerms = require('./functions/testPerms');
 
 const client = new Client({
     intents: [
@@ -39,6 +40,12 @@ const staticFiles = {
 }
 
 client.sfiles = staticFiles;
+
+client.config = {
+    prefix: '!'
+}
+
+client.checkPerms = checkPerms;
 
 // const connection = mysql.createConnection({
 //     host: 'sparty18.com',
