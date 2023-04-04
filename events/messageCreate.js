@@ -1,4 +1,5 @@
-const { AttachmentBuilder, EmbedBuilder } = require('discord.js');
+const { AttachmentBuilder, EmbedBuilder, ChannelType, Guild } = require('discord.js');
+const fs = require('fs');
 
 module.exports = {
     name: 'messageCreate',
@@ -9,8 +10,19 @@ module.exports = {
      * @returns 
      */
     async execute(client, message) {
+        const allowedChannelTypes = [
+            ChannelType.GuildText,
+            ChannelType.DM,
+            ChannelType.GuildVoice,
+            ChannelType.GuildStageVoice,
+            ChannelType.GuildForum,
+            ChannelType.GuildAnnouncement,
+            ChannelType.PublicThread,
+            ChannelType.PrivateThread,
+        ]
+        if (!allowedChannelTypes.includes(message.channel.type)) return;
         if (message.channel.isDMBased()) {
-            if (message.author == client.user) return;
+            if (message.author.bot) return;
             const logs = client.channels.cache.get('1078742960197357658');
             const files = []
             for (const attachment of message.attachments.values()) {
@@ -48,75 +60,24 @@ module.exports = {
             });
         }
 
-        if (!message.content.startsWith("!") || message.author.bot) return;
-        const args = message.content.replace('!', '').trim().split(' ');
-        const command = args.shift().toLowerCase();
-        switch (command) {
-            case 'ping':
-                await message.reply('Pong!');
+        if (!message.content.startsWith(client.config.prefix)) return;
+        const commandText = message.content.slice(client.config.prefix.length).trim().split(/ +/g).shift().toLowerCase();
+        const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+        for (const file of commandFiles) {
+            const command = require(`../commands/${file}`);
+            if (!command.type?.text || !command.triggers) continue;
+            if (!command.triggers.includes(commandText)) continue;
+            if (command.channelLimits && !command.channelLimits.includes(message.channel.type)) {
+                message.reply('This command cannot be used in this channel type!');
                 break;
-            case 'help':
-                await message.reply('Commands: !help, !astolfo, !thebo, !thegoods');
+            }
+            if (message.guild && command.requiredPermissions && !message.member.permissions.has(command.requiredPermissions, true)) {
+                message.reply('You do not have the required permissions to use this command!');
                 break;
-            case 'astolfo':
-                await fetch('https://www.reddit.com/r/astolfo/random/.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        const validLinks = data.data.children.filter(post => post.data.post_hint == 'image');
-                        const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
-                        const embed = new EmbedBuilder()
-                            .setTitle(randomLink.data.title)
-                            .setURL(randomLink.data.url)
-                            .setImage(randomLink.data.url)
-                            .setTimestamp()
-
-                        message.reply({ embeds: [embed] });
-                    })
-                break;
-            case 'thebo':
-                const { thebo } = require('../online_assets.json')
-                const selection2 = Math.floor(Math.random() * thebo.length) - 1;
-                await message.reply(thebo[selection2]);
-                break;
-            case 'thegoods':
-                const file = new AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' });
-                await message.reply({ files: [file] });
-                break;
-            case 'about':
-            case 'info':
-            case 'details':
-                const imageURL = "https://cdn.discordapp.com/attachments/1078326760539684864/1089361508196159609/IMG_2351.png" // Developer Note: I typed this out by hand. Stupid school blocks Discord.
-                const embed = new EmbedBuilder()
-                    .setAuthor(
-                        {
-                            name: 'FemDevs',
-                            iconURL: imageURL,
-                            url: 'https://github.com/FemDevs'
-                        }
-                    )
-                    .setTitle('About the bot')
-                    .setDescription('This is a private bot originally created by Alex. We then moved it over to FemDevs, which includes Benpai and Oblong too.')
-                    .addFields(
-                        {
-                            name: 'Developers',
-                            value: [
-                                '<@505458216474378271> - Oblong',
-                                '<@530748350119673896> - Alex',
-                                '<@957352586086875216> - Benpai'
-                            ].join('\n')
-                        }
-                    )
-                    .setFooter(
-                        {
-                            text: 'Made with humor by FemDevs',
-                            iconURL: imageURL
-                        }
-                    )
-                    .setTimestamp()
-                    .setColor(Math.floor(Math.random() * Math.pow(16, 6)))
-                await message.reply({ embeds: [embed] });
-            default:
-                break;
+            }
+            if (command.disabled) return message.reply({ content: 'This command is disabled!', ephemeral: true });
+            command.messageExecute(client, message);
+            break;
         }
     }
 }

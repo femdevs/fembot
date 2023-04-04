@@ -17,18 +17,20 @@ module.exports = {
         //         });
         //     }
         // });
-        fs.readdirSync(process.cwd() + '/commands').forEach(file => {
-            if (!file.endsWith('.js')) return;
+        const commandsFiles = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
+        for (const file of commandsFiles) {
             const command = require(`../commands/${file}`);
+            if (!command.type?.command) continue;
             if (commandName === command.name) {
+                if (command.disabled) return interaction.reply({ content: 'This command is disabled!', ephemeral: true });
                 try {
                     command.execute(client, interaction);
                 } catch (error) {
                     interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
                     console.error(error);
                 }
-                return
+                break;
             }
-        })
+        }
     }
 }
