@@ -18,6 +18,6 @@ export declare type CommandData = {
     messageExecute?: (client: Client, message: Message, args: Array<string?> | undefined) => void
     requiredPermissions?: PermissionFlags
     channelLimits?: Array<ChannelType>
-    trigger?: Array<string>
+    triggers?: Array<string>
     disabled?: boolean
-} 
+}
