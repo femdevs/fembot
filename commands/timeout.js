@@ -24,7 +24,7 @@ module.exports = {
             option
                 .setName('timeframe')
                 .setDescription('Choose whether to mute a member in minutes, hours, or days.')
-            )
+        )
         .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers),
     channelLimits: [
         ChannelType.GuildText,
@@ -55,10 +55,18 @@ module.exports = {
             member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => interaction.followUp({ embeds: [error_embed] }))
         }
     },
+    /**
+     * 
+     * @param {import('discord.js').Client} client 
+     * @param {import('discord.js').Message} message 
+     * @param {Array<string | null>} args 
+     * @returns 
+     */
     async messageExecute(client, message, args) {
         const member = message.mentions.members.first();
         if (!(member instanceof GuildMember)) return message.reply('Invalid member!');
-        const duration = args[1];
+        const duration = client.Utils.Time.stringToMilliseconds(args.join(' '));
+        const durationFormatted = client.Utils.Time.elapsedTime(duration/1000);
 
         const error_embed = new EmbedBuilder()
             .setTitle('Error')
@@ -77,9 +85,20 @@ module.exports = {
         } else {
             const embed = new EmbedBuilder()
                 .setTitle('Success!')
-                .setDescription(`${member} was successfully muted for ${duration}`)
+                .setDescription(`${member} was successfully muted for ${durationFormatted}`)
             await message.reply({ embeds: [embed] });
-            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => message.reply({ embeds: [error_embed] }));
+            member.disableCommunicationUntil(
+                new Date(
+                    Date.now() + duration
+                )
+            ).catch(
+                err =>
+                    message.reply(
+                        {
+                            embeds: [error_embed]
+                        }
+                    )
+            );
         }
     }
 }
