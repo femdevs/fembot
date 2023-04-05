@@ -1,7 +1,13 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, Embed } = require('discord.js');
+const { messageExecute } = require('./announce');
 
 module.exports = {
     name: 'timeout',
+    type: {
+        command: true,
+        text: true
+    },
+    triggers: ['timeout', 'mute'],
     data: new SlashCommandBuilder()
         .setName('timeout')
         .setDescription('Timeout (mute) a member.')
@@ -15,6 +21,11 @@ module.exports = {
                 .setName('duration')
                 .setDescription('How long to mute the user for.')
                 .setRequired(true))
+        .addStringOption(option =>
+            option
+                .setName('timeframe')
+                .setDescription('Choose whether to mute a member in minutes, hours, or days.')
+            )
         .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers),
     async execute(client, interaction) {
         const member = interaction.options.getUser('member');
@@ -29,12 +40,35 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle('Whoops!')
                 .setDescription('I can\'t mute myself!')
-            await interaction.reply({ embeds: [embed] })
+            await interaction.reply({ embeds: [embed] });
         } else {
             const embed = new EmbedBuilder()
                 .setTitle('Success!')
                 .setDescription(`${member} was successfully muted for ${duration}`)
-            await interaction.reply({ embeds: [embed] })
+            await interaction.reply({ embeds: [embed] });
+            member.timeout(60_000);
+        }
+    },
+    async messageExecute(client, message) {
+        const member = message.options.getUser('member');
+        const duration = message.options.getInteger('duration');
+
+        if (member === message.author) {
+            const embed = new EmbedBuilder()
+                .setTitle('Whoops!')
+                .setDescription('You can\'t mute yourself!')
+            await message.reply({ embeds: [embed] });
+        } else if (member === client.user) {
+            const embed = new EmbedBuilder()
+                .setTitle('Whoops!')
+                .setDescription('I can\'t mute myself!')
+            await message.reply({ embeds: [embed] });
+        } else {
+            const embed = new EmbedBuilder()
+                .setTitle('Success!')
+                .setDescription(`${member} was successfully muted for ${duration}`)
+            await message.reply({ embeds: [embed] });
+            member.timeout(60_000);
         }
     }
 }
