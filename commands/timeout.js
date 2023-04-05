@@ -56,8 +56,6 @@ module.exports = {
         if (!(member instanceof GuildMember)) return message.reply('Invalid member!');
         const duration = args[1];
 
-        console.log(member, '|', duration); // trying to split on words but im being silly :smile~1:
-
         if (member === message.author) {
             const embed = new EmbedBuilder()
                 .setTitle('Whoops!')
