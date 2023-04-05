@@ -33,6 +33,10 @@ module.exports = {
         const member = interaction.options.getMember('member');
         const duration = interaction.options.getInteger('duration');
 
+        const error_embed = new EmbedBuilder()
+            .setTitle('Error')
+            .setDescription('I was unable to mute that member.')
+
         if (member.user === interaction.user) {
             const embed = new EmbedBuilder()
                 .setTitle('Whoops!')
@@ -48,13 +52,17 @@ module.exports = {
                 .setTitle('Success!')
                 .setDescription(`${member} was successfully muted for ${duration}`)
             await interaction.reply({ embeds: [embed] });
-            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => interaction.followUp('I was unable to mute this member!'))
+            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => interaction.followUp({ embeds: [error_embed] }))
         }
     },
     async messageExecute(client, message, args) {
         const member = message.mentions.members.first();
         if (!(member instanceof GuildMember)) return message.reply('Invalid member!');
         const duration = args[1];
+
+        const error_embed = new EmbedBuilder()
+            .setTitle('Error')
+            .setDescription('I was unable to mute that member.')
 
         if (member === message.author) {
             const embed = new EmbedBuilder()
@@ -71,7 +79,7 @@ module.exports = {
                 .setTitle('Success!')
                 .setDescription(`${member} was successfully muted for ${duration}`)
             await message.reply({ embeds: [embed] });
-            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => message.reply('I was unable to mute this member!'))
+            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => message.reply({ embeds: [error_embed] }));
         }
     }
 }
