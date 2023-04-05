@@ -21,6 +21,27 @@ module.exports = {
             ChannelType.PrivateThread,
         ]
         if (!allowedChannelTypes.includes(message.channel.type)) return;
+        if (message.content.startsWith(client.config.prefix)) {
+            const commandText = message.content.slice(client.config.prefix.length).trim().split(/ +/g).shift().toLowerCase();
+            const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+            for (const file of commandFiles) {
+                const command = require(`../commands/${file}`);
+                if (!command.type?.text || !command.triggers) continue;
+                if (!command.triggers.includes(commandText)) continue;
+                if (command.channelLimits && !command.channelLimits.includes(message.channel.type)) {
+                    message.reply('This command cannot be used in this channel type!');
+                    break;
+                }
+                if (message.guild && command.requiredPermissions && !message.member.permissions.has(command.requiredPermissions, true)) {
+                    message.reply('You do not have the required permissions to use this command!');
+                    break;
+                }
+                if (command.disabled) return message.reply({ content: 'This command is disabled!', ephemeral: true });
+                command.messageExecute(client, message);
+                break;
+            }
+            return;
+        }
         if (message.channel.isDMBased()) {
             if (message.author.bot) return;
             const logs = client.channels.cache.get('1078742960197357658');
@@ -60,24 +81,5 @@ module.exports = {
             });
         }
 
-        if (!message.content.startsWith(client.config.prefix)) return;
-        const commandText = message.content.slice(client.config.prefix.length).trim().split(/ +/g).shift().toLowerCase();
-        const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
-        for (const file of commandFiles) {
-            const command = require(`../commands/${file}`);
-            if (!command.type?.text || !command.triggers) continue;
-            if (!command.triggers.includes(commandText)) continue;
-            if (command.channelLimits && !command.channelLimits.includes(message.channel.type)) {
-                message.reply('This command cannot be used in this channel type!');
-                break;
-            }
-            if (message.guild && command.requiredPermissions && !message.member.permissions.has(command.requiredPermissions, true)) {
-                message.reply('You do not have the required permissions to use this command!');
-                break;
-            }
-            if (command.disabled) return message.reply({ content: 'This command is disabled!', ephemeral: true });
-            command.messageExecute(client, message);
-            break;
-        }
     }
 }

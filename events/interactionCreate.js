@@ -23,6 +23,7 @@ module.exports = {
             if (!command.type?.command) continue;
             if (commandName === command.name) {
                 if (command.disabled) return interaction.reply({ content: 'This command is disabled!', ephemeral: true });
+                if (command.channelLimits && !command.channelLimits.includes(interaction.channel)) return interaction.reply({ content: 'This command cannot be used in this channel type!', ephemeral: true });
                 try {
                     command.execute(client, interaction);
                 } catch (error) {
