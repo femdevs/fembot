@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, Embed } = require('discord.js');
-const { messageExecute } = require('./announce');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, ChannelType, GuildMember } = require('discord.js');
 
 module.exports = {
     name: 'timeout',
@@ -27,6 +26,9 @@ module.exports = {
                 .setDescription('Choose whether to mute a member in minutes, hours, or days.')
             )
         .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers),
+    channelLimits: [
+        ChannelType.GuildText,
+    ],
     async execute(client, interaction) {
         const member = interaction.options.getUser('member');
         const duration = interaction.options.getInteger('duration');
@@ -49,9 +51,10 @@ module.exports = {
             member.timeout(60_000);
         }
     },
-    async messageExecute(client, message) {
-        const member = message.content[0];
-        const duration = message.content[1];
+    async messageExecute(client, message, args) {
+        const member = message.mentions.members.first();
+        if (!(member instanceof GuildMember)) return message.reply('Invalid member!');
+        const duration = args[1];
 
         console.log(member, '|', duration); // trying to split on words but im being silly :smile~1:
 
@@ -70,7 +73,7 @@ module.exports = {
                 .setTitle('Success!')
                 .setDescription(`${member} was successfully muted for ${duration}`)
             await message.reply({ embeds: [embed] });
-            member.timeout(60_000);
+            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => message.reply('I was unable to mute this member!'))
         }
     }
 }
