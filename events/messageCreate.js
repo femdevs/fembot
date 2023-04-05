@@ -37,7 +37,8 @@ module.exports = {
                     break;
                 }
                 if (command.disabled) return message.reply({ content: 'This command is disabled!', ephemeral: true });
-                command.messageExecute(client, message);
+                const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g).slice(1);
+                command.messageExecute(client, message, args);
                 break;
             }
             return;
