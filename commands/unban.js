@@ -23,9 +23,13 @@ module.exports = {
             .setDescription(`${member} has been unbanned`)
 
         try {
-        await interaction.guild.members.unban(member);
-        await interaction.reply({ embeds: [embed] });
+            await interaction.guild.members.unban(member);
+            await interaction.reply({ embeds: [embed] });
         } catch (error) {
+            const error_embed = new EmbedBuilder()
+                .setTitle('Error')
+                .setDescription(`It seems we encountered an error:\n\`${error}\``)
+            await interaction.reply({ embeds: [error_embed], epehmeral: true });
             console.error(error);
         }
     }

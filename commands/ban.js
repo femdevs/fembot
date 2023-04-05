@@ -24,14 +24,22 @@ module.exports = {
         const member = interaction.options.getMember('member');
         const reason = interaction.options.getString('reason');
 
-        if (member.id === client.user.id) {console.log('TESTING - I CANT BAN MYSELF')}
-        else if (member.id === interaction.user.id) {console.log('TESTING - YOU CANT BAN YOURSELF')}
+        const embed = new EmbedBuilder()
+            .setTitle('Success!')
+            .setDescription(`${member} was successfully banned.\n\n**Reason**\n${reason}`)
+
+        if (member === client.user) {console.log('TESTING - I CANT BAN MYSELF')}
+        else if (member === interaction.user) {console.log('TESTING - YOU CANT BAN YOURSELF')}
         else {
             try {
-            await interaction.guild.members.ban(member, { reason: reason});
-            console.log(`TESTING - SUCCESS! ${member} TEST BANNED WITH REASON ${reason}`);
+                await interaction.guild.members.ban(member, { reason: reason});
+                await interaction.reply({ embeds: [embed] })
             } catch (error) {
-                console.log(error);
+                const error_embed = new EmbedBuilder()
+                    .setTitle('Error')
+                    .setDescription(`It seems we encountered an error:\n\`${error}\``)
+                await interaction.reply({ embeds: [error_embed], epehmeral: true });
+                console.error(error);
             }
         };
     }
