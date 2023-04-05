@@ -30,15 +30,15 @@ module.exports = {
         ChannelType.GuildText,
     ],
     async execute(client, interaction) {
-        const member = interaction.options.getUser('member');
+        const member = interaction.options.getMember('member');
         const duration = interaction.options.getInteger('duration');
 
-        if (member === interaction.user) {
+        if (member.user === interaction.user) {
             const embed = new EmbedBuilder()
                 .setTitle('Whoops!')
                 .setDescription('You can\'t mute yourself!')
             await interaction.reply({ embeds: [embed] });
-        } else if (member === client.user) {
+        } else if (member.user === client.user) {
             const embed = new EmbedBuilder()
                 .setTitle('Whoops!')
                 .setDescription('I can\'t mute myself!')
@@ -48,7 +48,7 @@ module.exports = {
                 .setTitle('Success!')
                 .setDescription(`${member} was successfully muted for ${duration}`)
             await interaction.reply({ embeds: [embed] });
-            member.timeout(60_000);
+            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => interaction.followUp('I was unable to mute this member!'))
         }
     },
     async messageExecute(client, message, args) {
