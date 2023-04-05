@@ -15,23 +15,20 @@ module.exports = {
                 .setName('member')
                 .setDescription('Choose who to mute.')
                 .setRequired(true))
-        .addIntegerOption(option =>
+        .addStringOption(option =>
             option
                 .setName('duration')
                 .setDescription('How long to mute the user for.')
                 .setRequired(true))
-        .addStringOption(option =>
-            option
-                .setName('timeframe')
-                .setDescription('Choose whether to mute a member in minutes, hours, or days.')
-        )
         .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers),
     channelLimits: [
         ChannelType.GuildText,
     ],
     async execute(client, interaction) {
         const member = interaction.options.getMember('member');
-        const duration = interaction.options.getInteger('duration');
+        const duration = interaction.options.getString('duration');
+        const durationTime = client.Utils.Time.stringToMilliseconds(duration);
+        const durationFormatted = client.Utils.Time.elapsedTime(durationTime/1000);
 
         const error_embed = new EmbedBuilder()
             .setTitle('Error')
@@ -50,9 +47,9 @@ module.exports = {
         } else {
             const embed = new EmbedBuilder()
                 .setTitle('Success!')
-                .setDescription(`${member} was successfully muted for ${duration}`)
+                .setDescription(`${member} was successfully muted for ${durationFormatted}`)
             await interaction.reply({ embeds: [embed] });
-            member.disableCommunicationUntil(new Date(Date.now() + 60_000)).catch(err => interaction.followUp({ embeds: [error_embed] }))
+            member.disableCommunicationUntil(new Date(Date.now() + durationTime)).catch(err => interaction.followUp({ embeds: [error_embed] }))
         }
     },
     /**
