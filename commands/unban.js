@@ -29,7 +29,7 @@ module.exports = {
             const error_embed = new EmbedBuilder()
                 .setTitle('Error')
                 .setDescription(`It seems we encountered an error:\n\`${error}\``)
-            await interaction.reply({ embeds: [error_embed], epehmeral: true });
+            await interaction.reply({ embeds: [error_embed], ephemeral: true });
             console.error(error);
         }
     }

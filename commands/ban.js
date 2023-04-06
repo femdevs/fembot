@@ -14,7 +14,7 @@ module.exports = {
                 .setName('member')
                 .setDescription('Choose who to ban.')
                 .setRequired(true))
-        //.setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .addStringOption(option =>
             option
                 .setName('reason')
@@ -46,7 +46,7 @@ module.exports = {
                 const error_embed = new EmbedBuilder()
                     .setTitle('Error')
                     .setDescription(`It seems we encountered an error:\n\`${error}\``)
-                await interaction.reply({ embeds: [error_embed], epehmeral: true });
+                await interaction.reply({ embeds: [error_embed], ephemeral: true });
                 console.error(error);
             }
         };
