@@ -17,13 +17,14 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
     async execute(client, interaction) {
         const member = interaction.options.getUser('member');
+        const server = interaction.guild;
 
         const embed = new EmbedBuilder()
             .setTitle('Success!')
             .setDescription(`${member} has been unbanned`)
 
         try {
-            await interaction.guild.members.unban(member);
+            await server.members.unban(member);
             await interaction.reply({ embeds: [embed] });
         } catch (error) {
             const error_embed = new EmbedBuilder()
