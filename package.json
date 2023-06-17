@@ -9,7 +9,7 @@
     "mangodb": "^1.0.0",
     "mysql2": "^3.2.0",
     "nodemon": "^2.0.20",
-    "snoowrap": "^1.23.0",
+    "snoowrap": "^1.15.2",
     "uuid": "^9.0.0"
   },
   "name": "fembot",
