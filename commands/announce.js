@@ -21,13 +21,7 @@ module.exports = {
                 .setName('content')
                 .setDescription('Text that should be in the announcement.')
                 .setRequired(true))
-        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-        .addAttachmentOption(option =>
-            option
-                .setName('attachment')
-                .setDescription('Attach media content to go with the annoncement.')
-                .setRequired(false)
-        ),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
     /**
      * @param {import('discord.js').Client} client
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
@@ -51,7 +45,7 @@ module.exports = {
             .setDescription(`**Announcement sent in ${channel}!**`)
             .setColor(0x2ed95b);
 
-        await channel.send({ embeds: [announcementEmbed], files: [attachment] });
+        await channel.send({ embeds: [announcementEmbed] });
         await interaction.reply({ embeds: [confirmationEmbed], ephemeral: true });
     },
     async messageExecute(client, message) {
