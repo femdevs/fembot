@@ -51,7 +51,12 @@ module.exports = {
             .setDescription(`**Announcement sent in ${channel}!**`)
             .setColor(0x2ed95b);
 
-        await channel.send({ embeds: [announcementEmbed], });
+        if (attachment !== null) {
+            await channel.send({ embeds: [announcementEmbed], files: [attachment] });
+        }
+        else {
+            await channel.send({ embeds: [announcementEmbed] });
+        }
         await interaction.reply({ embeds: [confirmationEmbed], ephemeral: true });
     },
     async messageExecute(client, message) {
