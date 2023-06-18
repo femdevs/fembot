@@ -25,7 +25,7 @@ module.exports = {
         .addAttachmentOption(option =>
             option
                 .setName('attachment')
-                .setDescription('Attach media content to go with the annoncement.')
+                .setDescription('Attach media content to go with the announcement.')
                 .setRequired(false)
         ),
     /**
