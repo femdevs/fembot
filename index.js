@@ -61,7 +61,7 @@ fs
     .filter(file => file.endsWith('.js'))
     .forEach(file => {
         const event = require(`./events/${file}`);
-        console.log(chalk.bold`Registering {blue event} {red {underline ${event.name}}}`);
+        console.log(chalk.bold(`Registering ${chalk.blue("event")} ${chalk.red.underline.italic(event.name)}`));
         if (event.once) {
             client.once(event.name, (...args) => event.execute(client, ...args));
         } else {
@@ -75,13 +75,13 @@ const commands = fs
     .readdirSync('./commands')
     .filter(file => file.endsWith('.js'))
     .map(file => {
-        const command = require(`./commands/${file}`)
-        console.log(chalk.bold`Registering {blue command} {red {underline ${command.data.name}}}`)
-        return command.data.toJSON()
+        const command = require(`./commands/${file}`);
+        console.log(chalk.bold(`Registering ${chalk.blue("command")} ${chalk.red.underline.italic(command.data.name)}`));
+        return command.data.toJSON();
     });
 
 new REST({ version: '10' }).setToken(token).put(Routes.applicationCommands('1077240311874596945'), { body: commands })
-    .then(_ => console.log(chalk.green`Successfully registered {bold {underline {red ${commands.length}}}} application commands.`))
+    .then(_ => console.log(chalk.green(`Successfully registered ${chalk.bold.underline.red.italic(commands.length)} application commands.`)))
     .catch(console.error);
 
 client.login(token);

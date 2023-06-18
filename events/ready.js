@@ -13,24 +13,24 @@ module.exports = {
         }
         switch (Math.ceil(stats.ping / 100)) {
             case 1:
-                console.log(chalk.green`Ping: ${stats.ping}ms`);
+                console.log(`Ping: ${chalk.green(stats.ping + "ms")}`);
                 break;
             case 2:
-                console.log(chalk.yellow`Ping: ${stats.ping}ms`);
+                console.log(`Ping: ${chalk.yellow(stats.ping + "ms")}`);
                 break;
             case 3:
-                console.log(chalk.red`Ping: ${stats.ping}ms`);
+                console.log(`Ping: ${chalk.red(stats.ping + "ms")}`);
                 break;
             default:
-                console.log(chalk.red.underline.bold`Ping: ${stats.ping}ms`);
+                console.log(`Ping: ${chalk.red.underline.bold(stats.ping + "ms")}`);
                 break;
         }
         console.log()
-        console.log(chalk`Servers: {underline {bold {blue ${stats.servers}}}}`);
+        console.log(`Servers: ${chalk.underline.bold.blue(stats.servers)}`);
         console.log()
-        console.log(chalk`Users: {underline {bold {blue ${stats.users}}}}`);
+        console.log(`Users: ${chalk.underline.bold.blue(stats.users)}`);
         console.log()
-        console.log(chalk`Logged In as {underline {bold {blue ${stats.name}}}}`);
+        console.log(chalk`Logged In as ${chalk.underline.bold.blue(stats.name)}`);
         client.user.setPresence({
             activities: [
                 {
