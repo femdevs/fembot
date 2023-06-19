@@ -6,9 +6,6 @@ module.exports = {
         command: true,
         text: true,
     },
-    channelLimits: [
-        ChannelType.GuildText
-    ],
     triggers: ['serverinfo'],
     data: new SlashCommandBuilder()
         .setName('serverinfo')
