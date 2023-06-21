@@ -69,7 +69,7 @@ fs
         }
     });
 
-console.log(chalk.bold`------`)
+console.log(chalk.bold(`------`))
 
 const commands = fs
     .readdirSync('./commands')

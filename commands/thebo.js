@@ -1,4 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
+const online_assets = require('../online_assets.json');
+
+const thebo = online_assets.thebo
 
 module.exports = {
     name: 'thebo',
@@ -11,7 +14,7 @@ module.exports = {
         .setName('thebo')
         .setDescription('THE BO'),
     async execute(client, interaction) {
-        await interaction.reply(require('../online_assets.json').thebo[Math.floor(Math.random() * thebo.length)]);
+        await interaction.reply(thebo[Math.floor(Math.random() * thebo.length)]);
     },
     async messageExecute(client, message) {
         await message.reply(require('../online_assets.json').thebo[Math.floor(Math.random() * thebo.length)]);
