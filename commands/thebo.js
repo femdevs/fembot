@@ -17,6 +17,6 @@ module.exports = {
         await interaction.reply(thebo[Math.floor(Math.random() * thebo.length)]);
     },
     async messageExecute(client, message) {
-        await message.reply(require('../online_assets.json').thebo[Math.floor(Math.random() * thebo.length)]);
+        await message.reply(thebo[Math.floor(Math.random() * thebo.length)]);
     }
 }
