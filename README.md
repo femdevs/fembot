@@ -1,4 +1,3 @@
 # fembot
-A Discord bot for the Kingdom of Candia
-
-made by fembot developers they are really cool
+A General Purpose Discord Bot
+Made by FemDevs
