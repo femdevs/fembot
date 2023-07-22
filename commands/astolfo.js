@@ -11,6 +11,7 @@ module.exports = {
         .setName('astolfo')
         .setDescription('Take a guess'),
     async execute(client, interaction) {
+        await interaction.deferReply();
         await fetch(`https://www.reddit.com/r/astolfo/random/.json`)
             .then(response => response.json())
             .then(data => {
@@ -22,7 +23,7 @@ module.exports = {
                     .setImage(randomLink.data.url)
                     .setTimestamp()
 
-                interaction.reply({ embeds: [embed] });
+                interaction.editReply({ embeds: [embed] });
             })
     },
     async messageExecute(client, message) {
