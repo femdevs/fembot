@@ -1,7 +1,5 @@
-const { Client, Partials, GatewayIntentBits } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, REST, Routes } = require('discord.js');
 const fs = require('fs');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v10');
 const chalk = require('chalk')
 require('dotenv').config();
 const { TOKEN: token } = process.env;
@@ -80,7 +78,12 @@ const commands = fs
         return command.data.toJSON();
     });
 
-new REST({ version: '10' }).setToken(token).put(Routes.applicationCommands('1077240311874596945'), { body: commands })
+new REST({ version: '10' })
+    .setToken(token)
+    .put(
+        Routes.applicationCommands('1156992196453605568'),
+        { body: commands }
+    )
     .then(_ => console.log(chalk.green(`Successfully registered ${chalk.bold.underline.red.italic(commands.length)} application commands.`)))
     .catch(console.error);
 

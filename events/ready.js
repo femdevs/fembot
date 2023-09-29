@@ -4,6 +4,10 @@ const { ActivityType } = require('discord.js')
 module.exports = {
     name: 'ready',
     once: true,
+    /**
+     * 
+     * @param {import('discord.js').Client} client 
+     */
     async execute(client) {
         const stats = {
             ping: client.ws.ping,
