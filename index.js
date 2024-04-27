@@ -81,7 +81,7 @@ const commands = fs
 new REST({ version: '10' })
     .setToken(token)
     .put(
-        Routes.applicationCommands('1156992196453605568'),
+        Routes.applicationCommands('1077240311874596945'),
         { body: commands }
     )
     .then(_ => console.log(chalk.green(`Successfully registered ${chalk.bold.underline.red.italic(commands.length)} application commands.`)))
