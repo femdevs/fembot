@@ -1,14 +1,22 @@
-const { SlashCommandBuilder } = require('discord.js');
-
-module.exports = {
-    name: 'stats',
-    type: {
-        command: true,
-        text: true,
-    },
-    triggers: ['stats'],
-    data: new SlashCommandBuilder()
-        .setName('stats')
-        .setDescription('Check how many times you have ran a command!'),
-    disabled: true,
-}
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+module.exports =
+    new Command(
+        'stats',
+        ['stats'],
+        new Command.Info({
+            type: 'Development',
+            description: 'Check how many times you have ran a command!',
+            usage: 'stats',
+            examples: ['stats'],
+            disabled: true,
+        }),
+        new Command.Restrictions(),
+        { slash: false, text: false },
+        new SlashCommandBuilder()
+            .setName('stats')
+            .setDescription('Check how many times you have ran a command!'),
+    )
+        .setCommand(async (_interaction, _client) => { /* Do Stuff Here */ })
+        .setMessage(async (_message, _client) => { /* Do Stuff Here */ })
+        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });

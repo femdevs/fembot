@@ -1,41 +1,53 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+const axios = require('axios');
+module.exports =
+    new Command(
+        'astolfo',
+        ['astolfo'],
+        new Command.Info({
+            type: 'Fun',
+            description: 'Take a guess',
+            usage: 'astolfo',
+            examples: ['astolfo'],
+            disabled: false,
+        }),
+        new Command.Restrictions(),
+        { slash: true, text: true },
+        new SlashCommandBuilder()
+            .setName('astolfo')
+            .setDescription('Take a guess'),
+    )
+        .setCommand(async (interaction, client) => {
+            await interaction.deferReply();
+            const res = await axios.get(`https://www.reddit.com/r/Astolfo/hot/.json?limit=100`, {
+                headers: { 'User-Agent': 'Discord Bot (node-20)' },
+                responseType: 'json'
+            });
+            const { data } = await res.data;
+            const validLinks = data.children.filter(post => post.data.post_hint == 'image');
+            const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
+            const embed = client.embed()
+                .setTitle(randomLink.data.title)
+                .setURL(randomLink.data.url)
+                .setImage(randomLink.data.url)
+                .setTimestamp()
+            interaction.editReply({ embeds: [embed] });
+        })
+        .setMessage(async (message, client) => {
+            const res = await axios.get(`https://www.reddit.com/r/Astolfo/hot/.json?limit=100`, {
+                headers: { 'User-Agent': 'Discord Bot (node-20)' },
+                responseType: 'json'
+            });
+            const { data } = await res.data;
+            const validLinks = data.children.filter(post => post.data.post_hint == 'image');
+            const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
+            const embed = client.embed()
+                .setTitle(randomLink.data.title)
+                .setURL(randomLink.data.url)
+                .setImage(randomLink.data.url)
+                .setTimestamp()
 
-module.exports = {
-    name: 'astolfo',
-    type: {
-        command: true,
-        text: true
-    },
-    triggers: ['astolfo'],
-    data: new SlashCommandBuilder()
-        .setName('astolfo')
-        .setDescription('Take a guess'),
-    async execute(client, interaction) {
-        await interaction.deferReply();
-        await fetch(`https://www.reddit.com/r/astolfo/random/.json`)
-            .then(response => response.json())
-            .then(data => {
-                const validLinks = data.data.children.filter(post => post.data.post_hint == 'image');
-                const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
-                const embed = new EmbedBuilder()
-                    .setTitle(randomLink.data.title)
-                    .setURL(randomLink.data.url)
-                    .setImage(randomLink.data.url)
-                    .setTimestamp()
-
-                interaction.editReply({ embeds: [embed] });
-            })
-    },
-    async messageExecute(client, message) {
-        const {data} = (await fetch(`https://www.reddit.com/r/astolfo/random/.json`).then(response => response.json()))
-        const validLinks = data.children.filter(post => post.data.post_hint == 'image');
-        const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
-        const embed = new EmbedBuilder()
-            .setTitle(randomLink.data.title)
-            .setURL(randomLink.data.url)
-            .setImage(randomLink.data.url)
-            .setTimestamp()
-
-        message.reply({ embeds: [embed] });
-    }
-}
+            message.reply({ embeds: [embed] });
+        })
+        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });

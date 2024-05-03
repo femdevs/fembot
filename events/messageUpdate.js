@@ -1,17 +1,15 @@
 const { Events } = require('discord.js');
 const { Discord: { Initializers: { Event } } } = require('../modules/util.js');
 
-module.exports = new Event(Events.MessageCreate)
-    .setExecute(async (client, message) => {
-        if (message.author.bot || message.partial) {
-            return;
-        }
-        const { content } = message;
+module.exports = new Event(Events.MessageUpdate)
+    .setExecute(async (client, oldMsg, newMsg) => {
+        if (oldMsg.content === newMsg.content || newMsg.author.bot || newMsg.partial) return;
+        const { content } = newMsg;
         Array.from(client.Triggers.entries())
             .filter(([_, t]) => t.globalDisable === false)
             .forEach(([_, trigger]) => {
                 const { triggerConfig, execute } = trigger;
-                const { channel, role, user, message: msg } = triggerConfig;
+                const { channel, role, user, Message: msg } = triggerConfig;
                 const checkPrefix = (sector) => !triggerConfig[sector].requirePrefix ||
                     triggerConfig[sector].requirePrefix &&
                     content.startsWith(client.configs.prefix);
@@ -19,16 +17,16 @@ module.exports = new Event(Events.MessageCreate)
                     Array.of(
                         channel.activated && (
                             channel.ids.length > 0 &&
-                            channel.ids.includes(message.channel.id) ||
+                            channel.ids.includes(newMsg.channel.id) ||
                             channel.types.length > 0 &&
-                            channel.types.includes(message.channel.type)
+                            channel.types.includes(newMsg.channel.type)
                         ),
                         role.activated &&
                         role.ids.length > 0 &&
-                        message.member.roles.cache.some((role) => role.ids.includes(role.id)),
+                        newMsg.member.roles.cache.some((role) => role.ids.includes(role.id)),
                         user.activated &&
                         user.ids.length > 0 &&
-                        user.ids.includes(message.author.id),
+                        user.ids.includes(newMsg.author.id),
                         msg.activated && Array.of(
                             msg.prefixes.length > 0 &&
                             msg.prefixes.some((prefix) => content.toLowerCase().startsWith(prefix.toLowerCase())),
@@ -39,11 +37,11 @@ module.exports = new Event(Events.MessageCreate)
                             msg.regex.length > 0 && msg.regex.some((regEx) => regEx.test(content.toLowerCase())),
                         ).some((b) => b),
                     )
-                        .map((value, index) => value && checkPrefix(['channel', 'role', 'user', 'message'][index]))
+                        .map((value, index) => value && checkPrefix(['channel', 'role', 'user', 'newMsg'][index]))
                         .findIndex(Boolean);
                 if (executed === -1) return;
-                client.bumpRTS(`triggers.${['channel', 'role', 'user', 'message'][executed]}`);
-                return execute(message, client);
+                client.bumpRTS(`triggers.${['channel', 'role', 'user', 'newMsg'][executed]}`);
+                return execute(newMsg, client);
             });
         if (content.startsWith(client.configs.prefix)) {
             const check = (v) => [null, [], false, undefined].includes(v)
@@ -53,17 +51,17 @@ module.exports = new Event(Events.MessageCreate)
             if (!command || !command.type.text) return;
             client.bumpRTS('commands.text');
             const fail = Array.of(
-                check(command.blockDM) && message.channel.isDMBased(),
-                check(command.channelLimits) && command.channelLimits.every((value) => value !== message.channel.type),
+                check(command.blockDMs) && newMsg.channel.isDMBased(),
+                check(command.channelLimits) && command.channelLimits.includes(newMsg.channel.type),
                 Array.of(
-                    check(command.requiredPerm) && message.guild && !message.member.permissions.has(command.requiredPerm),
-                    check(command.allowedRoles) && !message.member.roles.cache.some((role) => command.allowedRoles.includes(role.id)),
-                    check(command.allowedUsers) && !command.allowedUsers.includes(message.author.id),
-                ).every(Boolean),
-                command.disabled,
-            ).indexOf(Boolean);
-            return fail !== -1
-                ? message.reply({ content: ['dmDisabled', 'invalidChannelType', 'noPerms', 'disabled'].map((e) => client.configs.defaults[e])[fail] })
-                : command.messageExecute(message, client);
+                    Array.of(check(command.requiredPerm), newMsg.guild, !newMsg.member.permissions.has(command.requiredPerm)),
+                    Array.of(check(command.allowedRoles), !newMsg.member.roles.cache.some((role) => command.allowedRoles.includes(role.id))),
+                    Array.of(check(command.allowedUsers), !command.allowedUsers.includes(newMsg.author.id)),
+                ).map(a => a.every(Boolean)).includes(true),
+                command.disabled
+            ).findIndex(Boolean);
+            return fail
+                ? newMsg.reply(['dmDisabled', 'invalidChannelType', 'noPerms', 'disabled'].map((e) => client.configs.defaults[e])[fail])
+                : command.messageExecute(newMsg, client);
         }
     });

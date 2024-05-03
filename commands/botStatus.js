@@ -1,84 +1,64 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
-const os = require('os')
-
-module.exports = {
-    name: 'botstatus',
-    type: {
-        command: true,
-        text: true
-    },
-    triggers: ['botstatus', 'status', 'stats'],
-    data: new SlashCommandBuilder()
-        .setName('botstatus')
-        .setDescription('Bot Status'),
-    async execute(client, interaction) {
-        const data = {
-            uptime: client.Utils.Time.elapsedTime(process.uptime()),
-            ping: client.ws.ping,
-            cpu: (os.cpus().map(cpu => ((cpu.times.user + cpu.times.sys) / cpu.times.idle) * 100).reduce((a, b) => a + b, 0) / os.cpus().length).toFixed(2),
-            memory: ((os.totalmem() - os.freemem()) / 1024 / 1024 / 1024).toFixed(2)
-        }
-        const embed = new EmbedBuilder()
-            .setTitle('Bot Status')
-            .setColor(parseInt(client.Utils.Random.randHex(), 16))
+const { SlashCommandBuilder } = require('discord.js');
+const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+module.exports =
+    new Command(
+        'botstatus',
+        ['botstatus'],
+        new Command.Info({
+            type: 'Development',
+            description: 'Bot Status',
+            usage: 'botstatus',
+            examples: ['botstatus'],
+            disabled: false,
+        }),
+        new Command.Restrictions(),
+        { slash: true, text: true },
+        new SlashCommandBuilder()
+            .setName('botstatus')
             .setDescription('Bot Status')
-            .setFooter({
-                text: 'Bot Status | Made by FemDevs',
-            })
-            .setTimestamp()
-            .addFields(
-                {
-                    name: 'Uptime',
-                    value: data.uptime
-                },
-                {
-                    name: 'Ping',
-                    value: data.ping + 'ms'
-                },
-                {
-                    name: 'CPU',
-                    value: data.cpu + '%'
-                },
-                {
-                    name: 'Memory',
-                    value: data.memory + 'GB'
-                }
-            )
-        interaction.reply({ embeds: [embed] })
-    },
-    async messageExecute(client, message) {
-        const data = {
-            uptime: client.Utils.Time.elapsedTime(process.uptime()),
-            ping: client.ws.ping,
-            cpu: (os.cpus().map(cpu => ((cpu.times.user + cpu.times.sys) / cpu.times.idle) * 100).reduce((a, b) => a + b, 0) / os.cpus().length).toFixed(2),
-            memory: ((os.totalmem() - os.freemem()) / 1024 / 1024 / 1024).toFixed(2)
-        }
-        const embed = new EmbedBuilder()
-            .setTitle('Bot Status')
-            .setColor(parseInt(client.Utils.Random.randHex(), 16))
-            .setDescription('Bot Status')
-            .setFooter({
-                text: 'Bot Status | Made by FemDevs',
-            })
-            .setTimestamp()
-            .addFields(
-                {
-                    name: 'Uptime',
-                    value: data.uptime
-                },
-                {
-                    name: 'Ping',
-                    value: data.ping + 'ms'
-                },
-                {
-                    name: 'CPU',
-                    value: data.cpu + '%'
-                },
-                {
-                    name: 'Memory',
-                    value: data.memory + 'GB'
-                }
-            )
-        message.reply({ embeds: [embed] })
-    }
-}
+    )
+        .setCommand(async (interaction, client) => {
+            const data = client.stats()
+            const embed = client.embed()
+                .setTitle('Bot Status')
+                .setDescription('Bot Status')
+                .setTimestamp()
+                .addFields(
+                    {
+                        name: 'Uptime',
+                        value: data.uptime
+                    },
+                    {
+                        name: 'Ping',
+                        value: data.ping + 'ms'
+                    },
+                    {
+                        name: 'Ram',
+                        value: `${data.ram.botOnly.rawValue}${data.ram.botOnly.unit}`
+                    }
+                )
+            interaction.reply({ embeds: [embed] })
+        })
+        .setMessage(async (message, client) => {
+            const data = client.stats()
+            const embed = client.embed()
+                .setTitle('Bot Status')
+                .setDescription('Bot Status')
+                .setTimestamp()
+                .addFields(
+                    {
+                        name: 'Uptime',
+                        value: data.uptime
+                    },
+                    {
+                        name: 'Ping',
+                        value: data.ping + 'ms'
+                    },
+                    {
+                        name: 'Ram',
+                        value: `${data.ram.botOnly.rawValue}${data.ram.botOnly.unit}`
+                    }
+                )
+            message.reply({ embeds: [embed] })
+        })
+        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });

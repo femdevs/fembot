@@ -1,0 +1,442 @@
+[
+  {
+    "name": "AusPost 4 State Customer Code",
+    "value": "auspost"
+  },
+  {
+    "name": "Aztec Code",
+    "value": "azteccode"
+  },
+  {
+    "name": "Compact Aztec Code",
+    "value": "azteccodecompact"
+  },
+  {
+    "name": "Aztec Runes",
+    "value": "aztecrune"
+  },
+  {
+    "name": "BC412",
+    "value": "bc412"
+  },
+  {
+    "name": "Channel Code",
+    "value": "channelcode"
+  },
+  {
+    "name": "Codablock F",
+    "value": "codablockf"
+  },
+  {
+    "name": "Code 11",
+    "value": "code11"
+  },
+  {
+    "name": "Code 128",
+    "value": "code128"
+  },
+  {
+    "name": "Code 16K",
+    "value": "code16k"
+  },
+  {
+    "name": "Code 25",
+    "value": "code2of5"
+  },
+  {
+    "name": "Italian Pharmacode",
+    "value": "code32"
+  },
+  {
+    "name": "Code 39",
+    "value": "code39"
+  },
+  {
+    "name": "Code 39 Extended",
+    "value": "code39ext"
+  },
+  {
+    "name": "Code 49",
+    "value": "code49"
+  },
+  {
+    "name": "Code 93",
+    "value": "code93"
+  },
+  {
+    "name": "Code 93 Extended",
+    "value": "code93ext"
+  },
+  {
+    "name": "Code One",
+    "value": "codeone"
+  },
+  {
+    "name": "COOP 2 of 5",
+    "value": "coop2of5"
+  },
+  {
+    "name": "Custom 4 state symbology",
+    "value": "daft"
+  },
+  {
+    "name": "GS1 DataBar Expanded",
+    "value": "databarexpanded"
+  },
+  {
+    "name": "GS1 DataBar Expanded Composite",
+    "value": "databarexpandedcomposite"
+  },
+  {
+    "name": "GS1 DataBar Expanded Stacked",
+    "value": "databarexpandedstacked"
+  },
+  {
+    "name": "GS1 DataBar Expanded Stacked Composite",
+    "value": "databarexpandedstackedcomposite"
+  },
+  {
+    "name": "GS1 DataBar Limited",
+    "value": "databarlimited"
+  },
+  {
+    "name": "GS1 DataBar Limited Composite",
+    "value": "databarlimitedcomposite"
+  },
+  {
+    "name": "GS1 DataBar Omnidirectional",
+    "value": "databaromni"
+  },
+  {
+    "name": "GS1 DataBar Omnidirectional Composite",
+    "value": "databaromnicomposite"
+  },
+  {
+    "name": "GS1 DataBar Stacked",
+    "value": "databarstacked"
+  },
+  {
+    "name": "GS1 DataBar Stacked Composite",
+    "value": "databarstackedcomposite"
+  },
+  {
+    "name": "GS1 DataBar Stacked Omnidirectional",
+    "value": "databarstackedomni"
+  },
+  {
+    "name": "GS1 DataBar Stacked Omnidirectional Composite",
+    "value": "databarstackedomnicomposite"
+  },
+  {
+    "name": "GS1 DataBar Truncated",
+    "value": "databartruncated"
+  },
+  {
+    "name": "GS1 DataBar Truncated Composite",
+    "value": "databartruncatedcomposite"
+  },
+  {
+    "name": "Datalogic 2 of 5",
+    "value": "datalogic2of5"
+  },
+  {
+    "name": "Data Matrix",
+    "value": "datamatrix"
+  },
+  {
+    "name": "Data Matrix Rectangular",
+    "value": "datamatrixrectangular"
+  },
+  {
+    "name": "Data Matrix Rectangular Extension",
+    "value": "datamatrixrectangularextension"
+  },
+  {
+    "name": "DotCode",
+    "value": "dotcode"
+  },
+  {
+    "name": "EAN-13",
+    "value": "ean13"
+  },
+  {
+    "name": "EAN-13 Composite",
+    "value": "ean13composite"
+  },
+  {
+    "name": "GS1-14",
+    "value": "ean14"
+  },
+  {
+    "name": "EAN-2 (2 digit addon)",
+    "value": "ean2"
+  },
+  {
+    "name": "EAN-5 (5 digit addon)",
+    "value": "ean5"
+  },
+  {
+    "name": "EAN-8",
+    "value": "ean8"
+  },
+  {
+    "name": "EAN-8 Composite",
+    "value": "ean8composite"
+  },
+  {
+    "name": "Flattermarken",
+    "value": "flattermarken"
+  },
+  {
+    "name": "GS1-128",
+    "value": "gs1-128"
+  },
+  {
+    "name": "GS1-128 Composite",
+    "value": "gs1-128composite"
+  },
+  {
+    "name": "GS1 Composite 2D Component",
+    "value": "gs1-cc"
+  },
+  {
+    "name": "GS1 Data Matrix",
+    "value": "gs1datamatrix"
+  },
+  {
+    "name": "GS1 Data Matrix Rectangular",
+    "value": "gs1datamatrixrectangular"
+  },
+  {
+    "name": "GS1 Digital Link Data Matrix",
+    "value": "gs1dldatamatrix"
+  },
+  {
+    "name": "GS1 Digital Link QR Code",
+    "value": "gs1dlqrcode"
+  },
+  {
+    "name": "GS1 DotCode",
+    "value": "gs1dotcode"
+  },
+  {
+    "name": "GS1 North American Coupon",
+    "value": "gs1northamericancoupon"
+  },
+  {
+    "name": "GS1 QR Code",
+    "value": "gs1qrcode"
+  },
+  {
+    "name": "Han Xin Code",
+    "value": "hanxin"
+  },
+  {
+    "name": "HIBC Aztec Code",
+    "value": "hibcazteccode"
+  },
+  {
+    "name": "HIBC Codablock F",
+    "value": "hibccodablockf"
+  },
+  {
+    "name": "HIBC Code 128",
+    "value": "hibccode128"
+  },
+  {
+    "name": "HIBC Code 39",
+    "value": "hibccode39"
+  },
+  {
+    "name": "HIBC Data Matrix",
+    "value": "hibcdatamatrix"
+  },
+  {
+    "name": "HIBC Data Matrix Rectangular",
+    "value": "hibcdatamatrixrectangular"
+  },
+  {
+    "name": "HIBC MicroPDF417",
+    "value": "hibcmicropdf417"
+  },
+  {
+    "name": "HIBC PDF417",
+    "value": "hibcpdf417"
+  },
+  {
+    "name": "HIBC QR Code",
+    "value": "hibcqrcode"
+  },
+  {
+    "name": "IATA 2 of 5",
+    "value": "iata2of5"
+  },
+  {
+    "name": "Deutsche Post Identcode",
+    "value": "identcode"
+  },
+  {
+    "name": "Industrial 2 of 5",
+    "value": "industrial2of5"
+  },
+  {
+    "name": "Interleaved 2 of 5 (ITF)",
+    "value": "interleaved2of5"
+  },
+  {
+    "name": "ISBN",
+    "value": "isbn"
+  },
+  {
+    "name": "ISMN",
+    "value": "ismn"
+  },
+  {
+    "name": "ISSN",
+    "value": "issn"
+  },
+  {
+    "name": "ITF-14",
+    "value": "itf14"
+  },
+  {
+    "name": "Japan Post 4 State Customer Code",
+    "value": "japanpost"
+  },
+  {
+    "name": "Royal Dutch TPG Post KIX",
+    "value": "kix"
+  },
+  {
+    "name": "Deutsche Post Leitcode",
+    "value": "leitcode"
+  },
+  {
+    "name": "Royal Mail Mailmark",
+    "value": "mailmark"
+  },
+  {
+    "name": "Marks & Spencer",
+    "value": "mands"
+  },
+  {
+    "name": "Matrix 2 of 5",
+    "value": "matrix2of5"
+  },
+  {
+    "name": "MaxiCode",
+    "value": "maxicode"
+  },
+  {
+    "name": "MicroPDF417",
+    "value": "micropdf417"
+  },
+  {
+    "name": "Micro QR Code",
+    "value": "microqrcode"
+  },
+  {
+    "name": "MSI Modified Plessey",
+    "value": "msi"
+  },
+  {
+    "name": "USPS Intelligent Mail",
+    "value": "onecode"
+  },
+  {
+    "name": "PDF417",
+    "value": "pdf417"
+  },
+  {
+    "name": "Compact PDF417",
+    "value": "pdf417compact"
+  },
+  {
+    "name": "Pharmaceutical Binary Code",
+    "value": "pharmacode"
+  },
+  {
+    "name": "Two-track Pharmacode",
+    "value": "pharmacode2"
+  },
+  {
+    "name": "USPS PLANET",
+    "value": "planet"
+  },
+  {
+    "name": "Plessey UK",
+    "value": "plessey"
+  },
+  {
+    "name": "PosiCode",
+    "value": "posicode"
+  },
+  {
+    "name": "USPS POSTNET",
+    "value": "postnet"
+  },
+  {
+    "name": "Pharmazentralnummer (PZN)",
+    "value": "pzn"
+  },
+  {
+    "name": "QR Code",
+    "value": "qrcode"
+  },
+  {
+    "name": "Codabar",
+    "value": "rationalizedCodabar"
+  },
+  {
+    "name": "Custom 1D symbology",
+    "value": "raw"
+  },
+  {
+    "name": "Rectangular Micro QR Code",
+    "value": "rectangularmicroqrcode"
+  },
+  {
+    "name": "Royal Mail 4 State Customer Code",
+    "value": "royalmail"
+  },
+  {
+    "name": "SSCC-18",
+    "value": "sscc18"
+  },
+  {
+    "name": "Swiss QR Code",
+    "value": "swissqrcode"
+  },
+  {
+    "name": "Miscellaneous symbols",
+    "value": "symbol"
+  },
+  {
+    "name": "Telepen",
+    "value": "telepen"
+  },
+  {
+    "name": "Telepen Numeric",
+    "value": "telepennumeric"
+  },
+  {
+    "name": "Ultracode",
+    "value": "ultracode"
+  },
+  {
+    "name": "UPC-A",
+    "value": "upca"
+  },
+  {
+    "name": "UPC-A Composite",
+    "value": "upcacomposite"
+  },
+  {
+    "name": "UPC-E",
+    "value": "upce"
+  },
+  {
+    "name": "UPC-E Composite",
+    "value": "upcecomposite"
+  }
+]

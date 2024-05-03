@@ -1,46 +1,44 @@
-const chalk = require('chalk')
-const { ActivityType } = require('discord.js')
+const { Events } = require('discord.js');
+const { Discord: { Initializers: { Event } } } = require('../modules/util.js');
 
-module.exports = {
-    name: 'ready',
-    once: true,
-    /**
-     * 
-     * @param {import('discord.js').Client} client 
-     */
-    async execute(client) {
-        const stats = {
-            ping: client.ws.ping,
-            servers: client.guilds.cache.size,
-            server_names: client.guilds.cache.map(guild => guild.name),
+module.exports = new Event(Events.ClientReady)
+    .setExecute(async (client) => {
+        const currentStats = {
+            ping: Math.max(client.ws.ping, 0),
+            guilds: client.guilds.cache.size,
             users: client.users.cache.size,
-            name: client.user.tag,
-        }
-        switch (Math.ceil(stats.ping / 100)) {
-            case 1:
-                console.log(`Ping: ${chalk.green(stats.ping + "ms")}`);
-                break;
-            case 2:
-                console.log(`Ping: ${chalk.yellow(stats.ping + "ms")}`);
-                break;
-            case 3:
-                console.log(`Ping: ${chalk.red(stats.ping + "ms")}`);
-                break;
-            default:
-                console.log(`Ping: ${chalk.red.underline.bold(stats.ping + "ms")}\n`);
-                break;
-        }
-        console.log(`Servers: ${chalk.underline.bold.blue(stats.servers)}\n`);
-        console.log(`Server Names: ${chalk.underline.bold.blue(stats.server_names)}\n`);
-        console.log(`Users: ${chalk.underline.bold.blue(stats.users)}\n`);
-        console.log(chalk`Logged In as ${chalk.underline.bold.blue(stats.name)}\n`);
-        client.user.setPresence({
-            activities: [
-                {
-                    name: stats.servers > 1 ? `${stats.servers} Servers` : `1 Server`,
-                    type: ActivityType.Watching
-                }
-            ]
-        })
-    }
-}
+            channels: client.channels.cache.size,
+            commands: client.Commands.size,
+            components: {
+                contextMenus: client.Components.get('contextMenus').size,
+                buttons: client.Components.get('buttons').size,
+                selectMenus: client.Components.get('selectMenus').size,
+                modals: client.Components.get('modals').size,
+            },
+            events: client.Events.size,
+            triggers: client.Triggers.size,
+        };
+        Array
+            .of(`Logged in as {red ${client.user.username}}!`)
+            .concat(Array.of(
+                `Ping: {rgb(255,127,0) ${currentStats.ping} ms}`,
+                `Guilds: {yellow ${currentStats.guilds}}`,
+                `Users: {green ${currentStats.users}}`,
+                `Channels: {blue ${currentStats.channels}}`,
+                `Commands: {rgb(180,0,250) ${currentStats.commands}}`,
+                `Components: {rgb(255,100,100) ${Object.values(currentStats.components)
+                    .reduce((value1, value2) => value1 + value2, 0)
+                }}`,
+                `Events: {white ${currentStats.events}}`,
+                `Triggers: {grey ${currentStats.triggers}}`,
+                `Pre-defined messages: {cyan ${client.PredefinedMessages.size}}`,
+                `Statuses selection size: {rgb(0,255,255) ${client.statuses.size}}`,
+            )
+                .map((m) => `Current ${m}`))
+            .map((m) => `{bold [READY]} ${m}`)
+            .forEach((m) => import('chalk-template').then(({ template }) => console.log(template(m))));
+        setInterval(() => {
+            const [type, name] = Array.from(client.statuses).sort(() => Math.random() - 0.5)[0];
+            client.user.setPresence({ activities: [{ type, name }] });
+        }, 15e3);
+    });

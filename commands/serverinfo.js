@@ -1,131 +1,140 @@
-const { SlashCommandBuilder, EmbedBuilder, ChannelType } = require('discord.js');
-
-module.exports = {
-    name: 'serverinfo',
-    type: {
-        command: true,
-        text: true,
-    },
-    triggers: ['serverinfo'],
-    data: new SlashCommandBuilder()
-        .setName('serverinfo')
-        .setDescription('Shows information about the server'),
-    async execute(client, interaction) {
-        const data = {
-            guildId: interaction.guild.id,
-            guildName: interaction.guild.name,
-            guildOwner: (await interaction.guild.fetchOwner()),
-            guildMembers: {
-                total: interaction.guild.memberCount,
-                bots: interaction.guild.members.cache.filter(member => member.user.bot).size,
-                humans: interaction.guild.members.cache.filter(member => !member.user.bot).size,
-            },
-            guildChannels: {
-                total: interaction.guild.channels.cache.size,
-                text: interaction.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildText).size,
-                voice: interaction.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildVoice).size,
-                category: interaction.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildCategory).size,
-                announcements: interaction.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildAnnouncement).size,
-                stage: interaction.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildStageVoice).size,
-            },
-            guildRoles: interaction.guild.roles.cache.size,
-            guildCreatedAt: interaction.guild.createdTimestamp,
-            guildEmojis: {
-                total: interaction.guild.emojis.cache.size,
-                animated: interaction.guild.emojis.cache.filter(emoji => emoji.animated).size,
-                static: interaction.guild.emojis.cache.filter(emoji => !emoji.animated).size,
-            },
-            guildIcon: interaction.guild.iconURL({ dynamic: true }),
-        }
-        const embed = new EmbedBuilder()
-            .setTitle(`Info for ${interaction.guild.name}`)
-            .addFields(
-                {
-                    name: 'Owner',
-                    value: data.guildOwner.toString(),
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+module.exports =
+    new Command(
+        'serverinfo',
+        ['serverinfo'],
+        new Command.Info({
+            type: 'Information',
+            description: 'Shows information about the server',
+            usage: 'serverinfo',
+            examples: ['serverinfo'],
+            disabled: false,
+        }),
+        new Command.Restrictions({dms: true}),
+        { slash: true, text: true },
+        new SlashCommandBuilder()
+            .setName('serverinfo')
+            .setDescription('Shows information about the server'),
+    )
+        .setCommand(async (interaction, client) => {
+            const server = interaction.guild;
+            const data = {
+                guildId: server.id,
+                guildName: server.name,
+                guildOwner: (await server.fetchOwner()),
+                guildMembers: {
+                    total: server.memberCount,
+                    bots: server.members.cache.filter(member => member.user.bot).size,
+                    humans: server.members.cache.filter(member => !member.user.bot).size,
                 },
-                {
-                    name: 'Members',
-                    value: `Total: ${data.guildMembers.total}\nBots: ${data.guildMembers.bots}\nHumans: ${data.guildMembers.humans}`,
+                guildChannels: {
+                    total: server.channels.cache.size,
+                    text: server.channels.cache.filter(channel => channel.type === ChannelType.GuildText).size,
+                    voice: server.channels.cache.filter(channel => channel.type === ChannelType.GuildVoice).size,
+                    category: server.channels.cache.filter(channel => channel.type === ChannelType.GuildCategory).size,
+                    announcements: server.channels.cache.filter(channel => channel.type === ChannelType.GuildAnnouncement).size,
+                    stage: server.channels.cache.filter(channel => channel.type === ChannelType.GuildStageVoice).size,
                 },
-                {
-                    name: 'Channels',
-                    value: `Total: ${data.guildChannels.total}\nText: ${data.guildChannels.text}\nVoice: ${data.guildChannels.voice}\nCategory: ${data.guildChannels.category}\nAnnouncements: ${data.guildChannels.announcements}\nStage: ${data.guildChannels.stage}`,
+                guildRoles: server.roles.cache.size,
+                guildCreatedAt: server.createdTimestamp,
+                guildEmojis: {
+                    total: server.emojis.cache.size,
+                    animated: server.emojis.cache.filter(emoji => emoji.animated).size,
+                    static: server.emojis.cache.filter(emoji => !emoji.animated).size,
                 },
-                {
-                    name: 'Roles',
-                    value: data.guildRoles.toString(),
+                guildIcon: server.iconURL({ dynamic: true }),
+            }
+            const embed = client.embed
+                .setTitle(`Info for ${server.name}`)
+                .addFields(
+                    {
+                        name: 'Owner',
+                        value: data.guildOwner.toString(),
+                    },
+                    {
+                        name: 'Members',
+                        value: `Total: ${data.guildMembers.total}\nBots: ${data.guildMembers.bots}\nHumans: ${data.guildMembers.humans}`,
+                    },
+                    {
+                        name: 'Channels',
+                        value: `Total: ${data.guildChannels.total}\nText: ${data.guildChannels.text}\nVoice: ${data.guildChannels.voice}\nCategory: ${data.guildChannels.category}\nAnnouncements: ${data.guildChannels.announcements}\nStage: ${data.guildChannels.stage}`,
+                    },
+                    {
+                        name: 'Roles',
+                        value: data.guildRoles.toString(),
+                    },
+                    {
+                        name: 'Emojis',
+                        value: `Total: ${data.guildEmojis.total}\nAnimated: ${data.guildEmojis.animated}\nStatic: ${data.guildEmojis.static}`,
+                    },
+                    {
+                        name: 'Created At',
+                        value: `<t:${client.Utils.Time.unixTime(data.guildCreatedAt)}:F>`,
+                    },
+                )
+                .setColor(0xa331d4)
+                .setThumbnail(data.guildIcon);
+            await interaction.reply({ embeds: [embed] })
+        })
+        .setMessage(async (message, client) => {
+            const server = message.guild;
+            const data = {
+                guildId: server.id,
+                guildName: server.name,
+                guildOwner: (await server.fetchOwner()),
+                guildMembers: {
+                    total: server.memberCount,
+                    bots: server.members.cache.filter(member => member.user.bot).size,
+                    humans: server.members.cache.filter(member => !member.user.bot).size,
                 },
-                {
-                    name: 'Emojis',
-                    value: `Total: ${data.guildEmojis.total}\nAnimated: ${data.guildEmojis.animated}\nStatic: ${data.guildEmojis.static}`,
+                guildChannels: {
+                    total: server.channels.cache.size,
+                    text: server.channels.cache.filter(channel => channel.type === ChannelType.GuildText).size,
+                    voice: server.channels.cache.filter(channel => channel.type === ChannelType.GuildVoice).size,
+                    category: server.channels.cache.filter(channel => channel.type === ChannelType.GuildCategory).size,
+                    announcements: server.channels.cache.filter(channel => channel.type === ChannelType.GuildAnnouncement).size,
+                    stage: server.channels.cache.filter(channel => channel.type === ChannelType.GuildStageVoice).size,
                 },
-                {
-                    name: 'Created At',
-                    value: `<t:${client.Utils.Time.unixTime(data.guildCreatedAt)}:F>`,
+                guildRoles: server.roles.cache.size,
+                guildCreatedAt: server.createdTimestamp,
+                guildEmojis: {
+                    total: server.emojis.cache.size,
+                    animated: server.emojis.cache.filter(emoji => emoji.animated).size,
+                    static: server.emojis.cache.filter(emoji => !emoji.animated).size,
                 },
-            )
-            .setColor(0xa331d4)
-            .setThumbnail(data.guildIcon);
-        await interaction.reply({ embeds: [embed] });
-    },
-    async messageExecute(client, message) {
-        const data = {
-            guildId: message.guild.id,
-            guildName: message.guild.name,
-            guildOwner: (await message.guild.fetchOwner()),
-            guildMembers: {
-                total: message.guild.memberCount,
-                bots: message.guild.members.cache.filter(member => member.user.bot).size,
-                humans: message.guild.members.cache.filter(member => !member.user.bot).size,
-            },
-            guildChannels: {
-                total: message.guild.channels.cache.size,
-                text: message.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildText).size,
-                voice: message.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildVoice).size,
-                category: message.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildCategory).size,
-                announcements: message.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildAnnouncement).size,
-                stage: message.guild.channels.cache.filter(channel => channel.type === ChannelType.GuildStageVoice).size,
-            },
-            guildRoles: message.guild.roles.cache.size,
-            guildCreatedAt: message.guild.createdTimestamp,
-            guildEmojis: {
-                total: message.guild.emojis.cache.size,
-                animated: message.guild.emojis.cache.filter(emoji => emoji.animated).size,
-                static: message.guild.emojis.cache.filter(emoji => !emoji.animated).size,
-            },
-            guildIcon: message.guild.iconURL({ dynamic: true }),
-        }
-        const embed = new EmbedBuilder()
-            .setTitle(`Info for ${message.guild.name}`)
-            .addFields(
-                {
-                    name: 'Owner',
-                    value: data.guildOwner.toString(),
-                },
-                {
-                    name: 'Members',
-                    value: `Total: ${data.guildMembers.total}\nBots: ${data.guildMembers.bots}\nHumans: ${data.guildMembers.humans}`,
-                },
-                {
-                    name: 'Channels',
-                    value: `Total: ${data.guildChannels.total}\nText: ${data.guildChannels.text}\nVoice: ${data.guildChannels.voice}\nCategory: ${data.guildChannels.category}\nAnnouncements: ${data.guildChannels.announcements}\nStage: ${data.guildChannels.stage}`,
-                },
-                {
-                    name: 'Roles',
-                    value: data.guildRoles.toString(),
-                },
-                {
-                    name: 'Emojis',
-                    value: `Total: ${data.guildEmojis.total}\nAnimated: ${data.guildEmojis.filter(emoji => emoji.animated).size}\nStatic: ${data.guildEmojis.filter(emoji => !emoji.animated).size}`,
-                },
-                {
-                    name: 'Created At',
-                    value: `<t:${client.Utils.Time.unixTime(data.guildCreatedAt)}:F>`,
-                },
-            )
-            .setColor(0xa331d4)
-            .setThumbnail(data.guildIcon);
-        await message.reply({ embeds: [embed] });
-    }
-}
+                guildIcon: server.iconURL({ dynamic: true }),
+            }
+            const embed = client.embed
+                .setTitle(`Info for ${server.name}`)
+                .addFields(
+                    {
+                        name: 'Owner',
+                        value: data.guildOwner.toString(),
+                    },
+                    {
+                        name: 'Members',
+                        value: `Total: ${data.guildMembers.total}\nBots: ${data.guildMembers.bots}\nHumans: ${data.guildMembers.humans}`,
+                    },
+                    {
+                        name: 'Channels',
+                        value: `Total: ${data.guildChannels.total}\nText: ${data.guildChannels.text}\nVoice: ${data.guildChannels.voice}\nCategory: ${data.guildChannels.category}\nAnnouncements: ${data.guildChannels.announcements}\nStage: ${data.guildChannels.stage}`,
+                    },
+                    {
+                        name: 'Roles',
+                        value: data.guildRoles.toString(),
+                    },
+                    {
+                        name: 'Emojis',
+                        value: `Total: ${data.guildEmojis.total}\nAnimated: ${data.guildEmojis.filter(emoji => emoji.animated).size}\nStatic: ${data.guildEmojis.filter(emoji => !emoji.animated).size}`,
+                    },
+                    {
+                        name: 'Created At',
+                        value: `<t:${client.Utils.Time.unixTime(data.guildCreatedAt)}:F>`,
+                    },
+                )
+                .setColor(0xa331d4)
+                .setThumbnail(data.guildIcon);
+            await message.reply({ embeds: [embed] });
+        })
+        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });

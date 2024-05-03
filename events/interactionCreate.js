@@ -1,37 +1,45 @@
-const fs = require('fs');
+const {
+    Events,
+    ContextMenuCommandInteraction,
+    ButtonInteraction,
+    StringSelectMenuInteraction,
+    ModalSubmitInteraction,
+    ChatInputCommandInteraction,
+} = require('discord.js');
+const { Discord: { Initializers: { Event } } } = require('../modules/util.js');
 
-module.exports = {
-    name: 'interactionCreate',
-    async execute(client, interaction) {
-        if (!interaction.isCommand()) return;
-        const { commandName, user } = interaction;
-        // client.db.query(`SELECT * FROM users WHERE discordId = ${user.id}`, (err, rows) => {
-        //     if (err) throw err;
-        //     if (rows.length < 1) {
-        //         client.db.query(`INSERT INTO users (discordId, commandsRan) VALUES ('${user.id}', 1)`, (err, rows) => {
-        //             if (err) throw err;
-        //         });
-        //     } else {
-        //         client.db.query(`UPDATE users SET commandsRan = ${rows[0].commandsRan + 1} WHERE discordId = ${user.id}`, (err, rows) => {
-        //             if (err) throw err;
-        //         });
-        //     }
-        // });
-        const commandsFiles = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
-        for (const file of commandsFiles) {
-            const command = require(`../commands/${file}`);
-            if (!command.type?.command) continue;
-            if (commandName === command.name) {
-                if (command.disabled) return interaction.reply({ content: 'This command is disabled!', ephemeral: true });
-                if (command.channelLimits && !command.channelLimits.includes(interaction.channel)) return interaction.reply({ content: 'This command cannot be used in this channel type!', ephemeral: true });
-                try {
-                    command.execute(client, interaction);
-                } catch (error) {
-                    interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-                    console.error(error);
-                }
-                break;
-            }
+module.exports = new Event(Events.InteractionCreate)
+    .setExecute(async (client, interaction) => {
+        if (interaction.isAutocomplete()) return client.Commands.get(interaction.commandName).autocomplete(interaction, client);
+        if (interaction instanceof ChatInputCommandInteraction) {
+            const command = client.Commands.get(interaction.commandName);
+            if (!command) return;
+            client.bumpRTS('commands.slash');
+            const check = (v) => [null, [], false, undefined].includes(v)
+            const fail = Array.of(
+                check(command.blockDM) && interaction.channel.isDMBased(),
+                check(command.channelLimits) && command.channelLimits.every((value) => value !== interaction.channel.type),
+                Array.of(
+                    check(command.requiredPerm) && interaction.guild && !interaction.member.permissions.has(command.requiredPerm),
+                    check(command.allowedRoles) && !interaction.member.roles.cache.some((role) => command.allowedRoles.includes(role.id)),
+                    check(command.allowedUsers) && !command.allowedUsers.includes(interaction.user.id),
+                ).every(Boolean),
+                command.disabled,
+            ).indexOf(Boolean);
+            return fail !== -1
+                ? interaction.reply({ content: ['dmDisabled', 'invalidChannelType', 'noPerms', 'disabled'].map((e) => client.configs.defaults[e])[fail] })
+                : command.commandExecute(interaction, client);
         }
-    }
-}
+        const interactionType = [
+            [ButtonInteraction, 'buttons'],
+            [ModalSubmitInteraction, 'modals'],
+            [StringSelectMenuInteraction, 'selectMenus'],
+            [ContextMenuCommandInteraction, 'contextMenus'],
+        ].find(([inter]) => interaction instanceof inter);
+        if (!interactionType) return await interaction.reply({ content: 'This interaction is not supported yet.', ephemeral: true });
+        const InterType = interactionType[1];
+        client.bumpRTS(`components.${InterType}`);
+        return client.Components.get(InterType)
+            .get(interaction[InterType === 'contextMenus' ? 'commandName' : 'customId'])
+            .execute(interaction, client);
+    });

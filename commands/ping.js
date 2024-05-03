@@ -1,19 +1,26 @@
 const { SlashCommandBuilder } = require('discord.js');
-
-module.exports = {
-    name: 'ping',
-    type: {
-        command: true,
-        text: true
-    },
-    triggers: ['ping'],
-    data: new SlashCommandBuilder()
-        .setName('ping')
-        .setDescription('Replies with Pong!'),
-    async execute(client, interaction) {
-        await interaction.reply('Pong!');
-    },
-    async message(client, message) {
-        await message.reply('Pong!');
-    }
-}
+const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+module.exports =
+    new Command(
+        'ping',
+        ['ping'],
+        new Command.Info({
+            type: 'Information',
+            description: 'Replies with Pong!',
+            usage: 'ping',
+            examples: ['ping'],
+            disabled: false,
+        }),
+        new Command.Restrictions(),
+        { slash: true, text: true },
+        new SlashCommandBuilder()
+            .setName('ping')
+            .setDescription('Replies with Pong!'),
+    )
+        .setCommand(async (interaction, client) => {
+            await interaction.reply('Pong!');
+        })
+        .setMessage(async (message, client) => {
+            await message.reply('Pong!');
+        })
+        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
