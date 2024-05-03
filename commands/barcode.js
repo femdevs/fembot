@@ -1,8 +1,7 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
 const axios = require('axios');
-const {search} = require('fast-fuzzy');
-const fs = require('memory-fs');
+const fuse = require('fuse.js');
 module.exports =
     new Command(
         'barcode',
@@ -57,15 +56,22 @@ module.exports =
             return message.reply({ files: [new AttachmentBuilder(req.data, { name: `${type}-${require('uuid').v4()}.png` })] });
         })
         .setAutocomplete(async (interaction, client) => {
-            const { search } = require('fast-fuzzy');
-            const outputs = search(
-                interaction.options.getFocused(),
-                Array.from(client.BarcodeTypes)
-                    .map(type => type.name)
-            )
-                .map(result => ({
-                    name: result,
-                    value: Array.from(client.BarcodeTypes).find(type => type.name === result).value
-                }));
-            return interaction.respond(outputs.slice(0,20))
+            return interaction.respond(
+                (
+                    new client.Fuse(
+                        Array.from(client.BarcodeTypes),
+                        {
+                            threshold: 0.3,
+                            findAllMatches: true,
+                            ignoreLocation: true,
+                            useExtendedSearch: true,
+                            keys: ['name', 'value'],
+                        },
+                        client.BCTIndex
+                    )
+                )
+                    .search(interaction.options.getFocused())
+                    .map(({ item: { name, value } }) => ({ name, value }))
+                    .slice(0, 25)
+            );
         });

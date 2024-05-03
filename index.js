@@ -27,7 +27,9 @@ const
     } = Utils,
     chalk = require('chalk'),
     fs = require('fs'),
-    os = require('os');
+    os = require('os'),
+    fuse = require('fuse.js'),
+    {default: FuseType} = require('fuse.js'); // Do not use this import, it is only for type checking
 config({ path: [`${__dirname}/.env`, `${process.cwd()}/.env`, './.env'].find((f) => fs.existsSync(f)) });
 
 const mainClient = new Client({
@@ -65,9 +67,9 @@ const Components = new Collection()
 /** @type {Collection<string, _Message>} */
 const PredefinedMessages = new Collection();
 
-/** @type {Set<[int, string]>} */
-const statuses = new Set()
-    .add([ActivityType.Watching, 'The Server']);
+/** @type {Collection<number,{type: ActivityType, name: string}>} */
+const statuses = new Collection()
+    .set(0, { type: ActivityType.Watching, name: 'The Server' });
 
 /** @type {Set<{name: string, value: string}>} */
 const BarcodeTypes = new Set(JSON.parse(fs.readFileSync('barcodes', 'utf-8')))
@@ -146,6 +148,9 @@ const client = Object.assign(mainClient, {
     statuses,
     BarcodeTypes,
     Utils,
+    BCTIndex: fuse.createIndex(['name', 'value'], Array.from(BarcodeTypes)),
+    /** @type {FuseType} */
+    Fuse: fuse,
 });
 
 const interactions = [];

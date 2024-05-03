@@ -3,7 +3,7 @@ const { Discord: { Initializers: { Event } } } = require('../modules/util.js');
 
 module.exports = new Event(Events.ClientReady)
     .setExecute(async (client) => {
-        const currentStats = {
+        const cs = {
             ping: Math.max(client.ws.ping, 0),
             guilds: client.guilds.cache.size,
             users: client.users.cache.size,
@@ -21,24 +21,21 @@ module.exports = new Event(Events.ClientReady)
         Array
             .of(`Logged in as {red ${client.user.username}}!`)
             .concat(Array.of(
-                `Ping: {rgb(255,127,0) ${currentStats.ping} ms}`,
-                `Guilds: {yellow ${currentStats.guilds}}`,
-                `Users: {green ${currentStats.users}}`,
-                `Channels: {blue ${currentStats.channels}}`,
-                `Commands: {rgb(180,0,250) ${currentStats.commands}}`,
-                `Components: {rgb(255,100,100) ${Object.values(currentStats.components)
-                    .reduce((value1, value2) => value1 + value2, 0)
+                `Ping: {rgb(255,127,0) ${cs.ping} ms}`,
+                `Guilds: {yellow ${cs.guilds}}`,
+                `Users: {green ${cs.users}}`,
+                `Channels: {blue ${cs.channels}}`,
+                `Commands: {rgb(180,0,250) ${cs.commands}}`,
+                `Components: {rgb(255,100,100) ${Object.values(cs.components)
+                    .reduce(client.Utils.Reduce.add)
                 }}`,
-                `Events: {white ${currentStats.events}}`,
-                `Triggers: {grey ${currentStats.triggers}}`,
+                `Events: {white ${cs.events}}`,
+                `Triggers: {grey ${cs.triggers}}`,
                 `Pre-defined messages: {cyan ${client.PredefinedMessages.size}}`,
                 `Statuses selection size: {rgb(0,255,255) ${client.statuses.size}}`,
             )
                 .map((m) => `Current ${m}`))
             .map((m) => `{bold [READY]} ${m}`)
             .forEach((m) => import('chalk-template').then(({ template }) => console.log(template(m))));
-        setInterval(() => {
-            const [type, name] = Array.from(client.statuses).sort(() => Math.random() - 0.5)[0];
-            client.user.setPresence({ activities: [{ type, name }] });
-        }, 15e3);
+        setInterval(() => client.user.setPresence({ activities: [client.statuses.random()] }), 15e3);
     });

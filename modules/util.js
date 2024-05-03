@@ -1,6 +1,17 @@
 const Client = require('../index');
 const djs = require('discord.js');
 
+class General {
+    static Reduce = class {
+        static add = (a, b) => a + b;
+        static subtract = (a, b) => a - b;
+        static multiply = (a, b) => a * b;
+        static divide = (a, b) => a / b;
+        static exponent = (a, b) => a ** b;
+        static modulo = (a, b) => a % b;
+    }
+}
+
 /* eslint-disable @stylistic/max-len */
 /**
  * @class
@@ -1350,7 +1361,7 @@ class RuntimeStatistics {
 
 const thisSetter = (t) => { throw new ReferenceError(`${t.name} is Read - Only`) };
 
-class Utils {
+class Utils extends General {
     static Time = Timer;
     static Discord = Discord;
     static Text = Text;

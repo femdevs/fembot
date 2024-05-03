@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, Collection } = require('discord.js');
 const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
 const axios = require('axios');
 module.exports =
@@ -20,13 +20,13 @@ module.exports =
     )
         .setCommand(async (interaction, client) => {
             await interaction.deferReply();
+            const options = new Collection();
             const res = await axios.get(`https://www.reddit.com/r/Astolfo/hot/.json?limit=100`, {
                 headers: { 'User-Agent': 'Discord Bot (node-20)' },
                 responseType: 'json'
             });
-            const { data } = await res.data;
-            const validLinks = data.children.filter(post => post.data.post_hint == 'image');
-            const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
+            (await res.data).data.children.filter(post => post.data.post_hint == 'image').map(p => options.set(options.size, p))
+            const randomLink = options.random();
             const embed = client.embed()
                 .setTitle(randomLink.data.title)
                 .setURL(randomLink.data.url)
@@ -35,13 +35,13 @@ module.exports =
             interaction.editReply({ embeds: [embed] });
         })
         .setMessage(async (message, client) => {
+            const options = new Collection();
             const res = await axios.get(`https://www.reddit.com/r/Astolfo/hot/.json?limit=100`, {
                 headers: { 'User-Agent': 'Discord Bot (node-20)' },
                 responseType: 'json'
             });
-            const { data } = await res.data;
-            const validLinks = data.children.filter(post => post.data.post_hint == 'image');
-            const randomLink = validLinks[Math.floor(Math.random() * validLinks.length)];
+            (await res.data).data.children.filter(post => post.data.post_hint == 'image').map(p => options.set(options.size, p))
+            const randomLink = options.random();
             const embed = client.embed()
                 .setTitle(randomLink.data.title)
                 .setURL(randomLink.data.url)

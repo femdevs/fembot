@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
 module.exports =
     new Command(
@@ -45,7 +45,7 @@ module.exports =
                 },
                 guildIcon: server.iconURL({ dynamic: true }),
             }
-            const embed = client.embed
+            const embed = client.embed()
                 .setTitle(`Info for ${server.name}`)
                 .addFields(
                     {
@@ -54,11 +54,24 @@ module.exports =
                     },
                     {
                         name: 'Members',
-                        value: `Total: ${data.guildMembers.total}\nBots: ${data.guildMembers.bots}\nHumans: ${data.guildMembers.humans}`,
+                        value: client.Utils.Text.longText(
+                            '\n',
+                            `Total: ${data.guildMembers.total}`,
+                            `Bots: ${data.guildMembers.bots}`,
+                            `Humans: ${data.guildMembers.humans}`
+                        ),
                     },
                     {
                         name: 'Channels',
-                        value: `Total: ${data.guildChannels.total}\nText: ${data.guildChannels.text}\nVoice: ${data.guildChannels.voice}\nCategory: ${data.guildChannels.category}\nAnnouncements: ${data.guildChannels.announcements}\nStage: ${data.guildChannels.stage}`,
+                        value: client.Utils.Text.longText(
+                            '\n',
+                            `Total: ${data.guildChannels.total}`,
+                            `Text: ${data.guildChannels.text}`,
+                            `Voice: ${data.guildChannels.voice}`,
+                            `Category: ${data.guildChannels.category}`,
+                            `Announcements: ${data.guildChannels.announcements}`,
+                            `Stage: ${data.guildChannels.stage}`
+                        )
                     },
                     {
                         name: 'Roles',
@@ -66,11 +79,16 @@ module.exports =
                     },
                     {
                         name: 'Emojis',
-                        value: `Total: ${data.guildEmojis.total}\nAnimated: ${data.guildEmojis.animated}\nStatic: ${data.guildEmojis.static}`,
+                        value: client.Utils.Text.longText(
+                            '\n',
+                            `Total: ${data.guildEmojis.total}`,
+                            `Animated: ${data.guildEmojis.animated}`,
+                            `Static: ${data.guildEmojis.static}`
+                        ),
                     },
                     {
                         name: 'Created At',
-                        value: `<t:${client.Utils.Time.unixTime(data.guildCreatedAt)}:F>`,
+                        value: `<t:${client.Utils.Time.unixTime(new Date(data.guildCreatedAt))}:F>`,
                     },
                 )
                 .setColor(0xa331d4)
@@ -105,7 +123,7 @@ module.exports =
                 },
                 guildIcon: server.iconURL({ dynamic: true }),
             }
-            const embed = client.embed
+            const embed = client.embed()
                 .setTitle(`Info for ${server.name}`)
                 .addFields(
                     {
@@ -130,7 +148,7 @@ module.exports =
                     },
                     {
                         name: 'Created At',
-                        value: `<t:${client.Utils.Time.unixTime(data.guildCreatedAt)}:F>`,
+                        value: `<t:${client.Utils.Time.unixTime(new Date(data.guildCreatedAt))}:F>`,
                     },
                 )
                 .setColor(0xa331d4)
