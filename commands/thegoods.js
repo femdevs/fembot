@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
-const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+const { Discord: { Initializers: { Command } } } = require('@therealbenpai/djs-client').Utils
 module.exports =
     new Command(
         'thegoods',

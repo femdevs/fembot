@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+const { Discord: { Initializers: { Command } } } = require('@therealbenpai/djs-client').Utils
 const { thebo } = require('../online_assets.json');
 module.exports =
     new Command(

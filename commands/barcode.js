@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
-const { Discord: { Initializers: { Command } } } = require('../modules/util.js');
+const { Discord: { Initializers: { Command } } } = require('@therealbenpai/djs-client').Utils;
 const axios = require('axios');
 const fuse = require('fuse.js');
 module.exports =

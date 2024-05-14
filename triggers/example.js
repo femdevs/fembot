@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const { ChannelType } = require('discord.js');
-const { Discord: { Initializers: { Trigger } } } = require('../modules/util.js');
+const { Discord: { Initializers: { Trigger } } } = require('@therealbenpai/djs-client').Utils
 module.exports =
     new Trigger(
         'example',

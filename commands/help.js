@@ -3,7 +3,7 @@ const {
     Text,
     Discord: { Utils: { Markdown, EmbedUtils, Mentions }, Initializers: { Command } },
     List,
-} = require('../modules/util.js');
+} = require('@therealbenpai/djs-client').Utils;
 // @eslint-ignore-next-line no-unused-vars
 const handle = (client, command) => {
     const embed = client.embed()

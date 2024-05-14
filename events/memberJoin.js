@@ -1,5 +1,5 @@
-const { Events } = require('discord.js');
-const { Discord: { Initializers: { Event } } } = require('../modules/util.js');
+const { Events, Colors } = require('discord.js');
+const { Discord: { Initializers: { Event } } } = require('@therealbenpai/djs-client').Utils
 module.exports = new Event(Events.GuildMemberAdd)
     .setExecute(async (client, member) => {
         const welcomeChannelId = '1125106402264879196'
@@ -9,6 +9,6 @@ module.exports = new Event(Events.GuildMemberAdd)
             .setTitle(`${member.displayName} joined!`)
             .setDescription('Welcome! Please read the server rules before chatting with other members. Have fun!')
             .setThumbnail(avatarURL)
-            .setColor('Blurple')
+            .setColor(Colors.Blurple)
         await welcomeChannel.send({ embeds: [welcomeEmbed] })
     });

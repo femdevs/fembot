@@ -1,11 +1,9 @@
 const { Events } = require('discord.js');
-const { Discord: { Initializers: { Event } } } = require('../modules/util.js');
+const { Discord: { Initializers: { Event } } } = require('@therealbenpai/djs-client').Utils;
 
 module.exports = new Event(Events.MessageCreate)
     .setExecute(async (client, message) => {
-        if (message.author.bot || message.partial) {
-            return;
-        }
+        if (message.author.bot || message.partial) return;
         const { content } = message;
         Array.from(client.Triggers.entries())
             .filter(([_, t]) => t.globalDisable === false)
@@ -14,7 +12,7 @@ module.exports = new Event(Events.MessageCreate)
                 const { channel, role, user, message: msg } = triggerConfig;
                 const checkPrefix = (sector) => !triggerConfig[sector].requirePrefix ||
                     triggerConfig[sector].requirePrefix &&
-                    content.startsWith(client.configs.prefix);
+                    content.startsWith(client.prefix);
                 const executed =
                     Array.of(
                         channel.activated && (
@@ -40,30 +38,43 @@ module.exports = new Event(Events.MessageCreate)
                         ).some((b) => b),
                     )
                         .map((value, index) => value && checkPrefix(['channel', 'role', 'user', 'message'][index]))
-                        .findIndex(Boolean);
+                        .findIndex((value) => value === true);
                 if (executed === -1) return;
                 client.bumpRTS(`triggers.${['channel', 'role', 'user', 'message'][executed]}`);
                 return execute(message, client);
             });
-        if (content.startsWith(client.configs.prefix)) {
-            const check = (v) => [null, [], false, undefined].includes(v)
+        if (content.startsWith(client.prefix)) {
             const command = Array.from(client.Commands.values())
                 .find((cmd) => cmd.triggers
-                    .includes(content.split(' ')[0].slice(client.configs.prefix.length).toLowerCase()));
-            if (!command || !command.type.text) return;
+                    .includes(content.split(' ')[0].slice(client.prefix.length).toLowerCase()));
+            if (!command || !command.type.text) {
+                return;
+            }
             client.bumpRTS('commands.text');
-            const fail = Array.of(
-                check(command.blockDM) && message.channel.isDMBased(),
-                check(command.channelLimits) && command.channelLimits.every((value) => value !== message.channel.type),
+            const failureReason = Array.of(
+                Boolean(command.blockDMs) && message.channel.isDMBased(),
+                Boolean(command.channelLimits) &&
+                command.channelLimits.includes(message.channel.type),
                 Array.of(
-                    check(command.requiredPerm) && message.guild && !message.member.permissions.has(command.requiredPerm),
-                    check(command.allowedRoles) && !message.member.roles.cache.some((role) => command.allowedRoles.includes(role.id)),
-                    check(command.allowedUsers) && !command.allowedUsers.includes(message.author.id),
-                ).every(Boolean),
+                    !Boolean(command.requiredPerm),
+                    !message.guild,
+                    message.member.permissions.has(command.requiredPerm),
+                ).every((value) => !value),
+                Array.of(
+                    !Boolean(command.allowedRoles),
+                    message.member.roles.cache.some((role) => command.allowedRoles.includes(role.id)),
+                ).every((value) => !value),
+                Array.of(
+                    !Boolean(command.allowedUsers),
+                    command.allowedUsers.includes(message.author.id),
+                ).every((value) => !value),
                 command.disabled,
-            ).indexOf(Boolean);
-            return fail !== -1
-                ? message.reply({ content: ['dmDisabled', 'invalidChannelType', 'noPerms', 'disabled'].map((e) => client.configs.defaults[e])[fail] })
+            ).findIndex((value) => !value);
+            return failureReason
+                ? message.reply(
+                    ['dmDisabled', 'invalidChannelType', 'noPerms', 'noPerms', 'noPerms', 'disabled']
+                        .map((e) => client.configs.defaults[e])[failureReason],
+                )
                 : command.messageExecute(message, client);
         }
     });

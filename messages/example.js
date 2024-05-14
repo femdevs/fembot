@@ -1,4 +1,4 @@
-const { Discord: { Utils: { EmbedUtils }, Initializers: { Message: Msg } } } = require('../modules/util.js');
+const { Discord: { Utils: { EmbedUtils }, Initializers: { Message: Msg } } } = require('@therealbenpai/djs-client').Utils
 const { EmbedBuilder, ActionRowBuilder } = require('discord.js');
 
 module.exports = new Msg(

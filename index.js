@@ -1,249 +1,38 @@
 const
-    {
-        Client,
-        GatewayIntentBits: GIB,
-        ActivityType,
-        Partials,
-        EmbedBuilder,
-        PresenceUpdateStatus: Presence,
-        Collection,
-    } = require('discord.js'),
-    { Routes } = require('discord-api-types/v10'),
-    { REST } = require('@discordjs/rest'),
+    { Client } = require('@therealbenpai/djs-client'),
+    { ActivityType } = require('discord.js'),
     { config } = require('dotenv'),
-    Utils = require('./modules/util'),
-    {
-        Time,
-        List,
-        Discord: {
-            Initializers: {
-                Components: { _Button, _ContextMenu, _Modal, _SelectMenu },
-                _Command,
-                Event: _Ev,
-                _Trigger,
-                _Message,
-            },
-        },
-    } = Utils,
-    chalk = require('chalk'),
     fs = require('fs'),
-    os = require('os'),
-    fuse = require('fuse.js'),
-    {default: FuseType} = require('fuse.js'); // Do not use this import, it is only for type checking
+    { default: _fuseType } = require('fuse.js'),
+    Fuse = require('fuse.js');
 config({ path: [`${__dirname}/.env`, `${process.cwd()}/.env`, './.env'].find((f) => fs.existsSync(f)) });
 
-const mainClient = new Client({
-    intents: Array.from(Object.values(GIB)),
-    partials: Array.from(Object.values(Partials)),
-    presence: {
-        activities: [],
-        status: Presence.Online,
+const mainClient = new Client(
+    process.env.PREFIX,
+    process.env.TOKEN,
+    process.env.CLIENT_ID,
+    {
+        buttonsDir: `${__dirname}/components/buttons`,
+        commandsDir: `${__dirname}/commands`,
+        contextMenusDir: `${__dirname}/components/contextMenus`,
+        eventsDir: `${__dirname}/events`,
+        modalComponentsDir: `${__dirname}/components/modals`,
+        predefinedMessagesDir: `${__dirname}/messages`,
+        selectMenusDir: `${__dirname}/components/selectMenus`,
+        triggersDir: `${__dirname}/triggers`,
     },
-});
+);
 
-/** @type {Collection<string, _Button>} */
-const Buttons = new Collection();
-/** @type {Collection<string, _ContextMenu>} */
-const ContextMenus = new Collection();
-/** @type {Collection<string, _Modal>} */
-const Modals = new Collection();
-/** @type {Collection<string, _SelectMenu>} */
-const SelectMenus = new Collection();
+mainClient.Statuses
+    .set(1, { type: ActivityType.Watching, name: 'the community server' })
+    .set(2, { type: ActivityType.Listening, name: 'to the community' })
+    .set(3, { type: ActivityType.Playing, name: 'with the community' });
 
-/** @type {Collection<string, _Command>} */
-const Commands = new Collection();
-/** @type {Collection<string, _Ev>} */
-const Events = new Collection();
-/** @type {Collection<string, _Trigger>} */
-const Triggers = new Collection();
-// eslint-disable-next-line @stylistic/max-len
-/** @type {Collection<"buttons", Buttons>&Collection<"contextMenus", ContextMenus>&Collection<"modals", Modals>&Collection<"selectMenus", SelectMenus>} */
-const Components = new Collection()
-    .set('buttons', Buttons)
-    .set('contextMenus', ContextMenus)
-    .set('modals', Modals)
-    .set('selectMenus', SelectMenus);
+mainClient
+    .setBranding({ footer: { text: 'Made with ❤️ by the Pronouns.page' }, color: 0x2F3136 });
 
-/** @type {Collection<string, _Message>} */
-const PredefinedMessages = new Collection();
+const client = Object.assign(mainClient, { /** @type {_fuseType} */ Fuse });
 
-/** @type {Collection<number,{type: ActivityType, name: string}>} */
-const statuses = new Collection()
-    .set(0, { type: ActivityType.Watching, name: 'The Server' });
+client.start();
 
-/** @type {Set<{name: string, value: string}>} */
-const BarcodeTypes = new Set(JSON.parse(fs.readFileSync('barcodes', 'utf-8')))
-
-const client = Object.assign(mainClient, {
-    stats: () => {
-        const botRam = process.memoryUsage().heapTotal;
-        const rawBRam = (botRam / 1024 ** 2);
-        const globalRam = os.totalmem() - os.freemem();
-        const rawGRam = (globalRam / 1024 ** 2);
-        return {
-            ping: client.ws.ping,
-            uptime: List.and(Time.elapsedTime(Math.floor(process.uptime())).split(', ')),
-            guilds: client.guilds.cache.size.toString(),
-            ram: {
-                botOnly: {
-                    rawValue: (rawBRam > 1024 ? rawBRam / 1024 : rawBRam).toFixed(2),
-                    percentage: (botRam / os.totalmem() * 1e2).toFixed(2),
-                    unit: botRam / 1024 ** 3 > 1 ? 'GB' : 'MB',
-                },
-                global: {
-                    rawValue: (rawGRam > 1024 ? rawGRam / 1024 : rawGRam).toFixed(2),
-                    percentage: (globalRam / os.totalmem() * 1e2).toFixed(2),
-                    unit: globalRam / 1024 ** 3 > 1 ? 'GB' : 'MB',
-                },
-            },
-        };
-    },
-    embed: () => {
-        return new EmbedBuilder()
-            .setFooter(Utils.Discord.Utils.EmbedUtils.qFooter('Made with humor by FemDevs'))
-            .setColor(Math.floor(Math.random() * (16 ** 6)))
-            .setTimestamp()
-    },
-    runtimeStats: {
-        commands: {
-            text: new Utils.RuntimeStatistics(),
-            slash: new Utils.RuntimeStatistics(),
-        },
-        triggers: {
-            registered: 0,
-            role: new Utils.RuntimeStatistics(),
-            user: new Utils.RuntimeStatistics(),
-            channel: new Utils.RuntimeStatistics(),
-            message: new Utils.RuntimeStatistics(),
-        },
-        events: Object.assign(new Utils.RuntimeStatistics(), { sEE: {} }),
-        components: {
-            modals: new Utils.RuntimeStatistics(),
-            buttons: new Utils.RuntimeStatistics(),
-            selectMenus: new Utils.RuntimeStatistics(),
-            contextMenus: new Utils.RuntimeStatistics(),
-        },
-        predefinedMessages: new Utils.RuntimeStatistics(),
-    },
-    baseDir: __dirname,
-    configs: {
-        prefix: process.env.PREFIX ?? '',
-        defaults: {
-            disabled: 'This command is currently disabled',
-            noPerms: 'You do not have permission to use this command.',
-            dmDisabled: 'This command is disabled in DMs.',
-            invalidChannelType: 'This command cannot be used in this channel type.',
-        },
-    },
-    sfiles: { theGoods: fs.readFileSync('the_goods.mp3') },
-    gRTS: (key) => eval(`client.runtimeStats.${key}`),
-    gev: (name) => client.runtimeStats.events.sEE[`${name}`] = new Utils.RuntimeStatistics(),
-    regRTS: (key) => client.gRTS(key).reg(),
-    bumpRTS: (key) => client.gRTS(key).exec(),
-    Commands,
-    Events,
-    Triggers,
-    Components,
-    PredefinedMessages,
-    statuses,
-    BarcodeTypes,
-    Utils,
-    BCTIndex: fuse.createIndex(['name', 'value'], Array.from(BarcodeTypes)),
-    /** @type {FuseType} */
-    Fuse: fuse,
-});
-
-const interactions = [];
-const operations = [
-    [
-        `${__dirname}/events`,
-        (event) => {
-            Events.set(event.event, event);
-            client.regRTS('events');
-            client.gev(event.event);
-            client.on(event.event, (...args) => {
-                client.bumpRTS(`events.sEE.${event.event}`);
-                return event.execute(client, ...args);
-            });
-            console.log(chalk`{bold Loaded event} {green ${event.event}}`);
-        },
-    ],
-    [
-        `${__dirname}/commands`,
-        (command) => {
-            Commands.set(command.name, command);
-            if (command.type.text) client.regRTS('commands.text');
-            if (command.type.slash) {
-                client.regRTS('commands.slash');
-                interactions.push(command.data.toJSON());
-            }
-            console.log(chalk`{bold Loaded command} {blue ${command.name}}`);
-        },
-    ],
-    [
-        `${__dirname}/triggers`,
-        (trigger) => {
-            Triggers.set(trigger.name, trigger);
-            for (const key of Object.keys(trigger.triggerConfig)) {
-                if (trigger.triggerConfig[key].activated) client.regRTS(`triggers.${key}`);
-            }
-            console.log(chalk`{bold Loaded trigger} {yellow ${trigger.name}}`);
-        },
-    ],
-    [
-        `${__dirname}/components/contextMenus`,
-        (command) => {
-            Components.get('contextMenus').set(command.name, command);
-            client.regRTS('components.contextMenus');
-            interactions.push(command.data.toJSON());
-            console.log(chalk`{bold Loaded contextMenu} {magenta ${command.name}}`);
-        },
-    ],
-    [
-        `${__dirname}/components/buttons`,
-        (command) => {
-            Components.get('buttons').set(command.name, command);
-            client.regRTS('components.buttons');
-            console.log(chalk`{bold Loaded button} {cyan ${command.name}}`);
-        },
-    ],
-    [
-        `${__dirname}/components/selectMenus`,
-        (command) => {
-            Components.get('selectMenus').set(command.name, command);
-            client.regRTS('components.selectMenus');
-            console.log(chalk`{bold Loaded selectMenu} {red ${command.name}}`);
-        },
-    ],
-    [
-        `${__dirname}/components/modals`,
-        (command) => {
-            Components.get('modals').set(command.name, command);
-            client.regRTS('components.modals');
-            console.log(chalk`{bold Loaded modal} {red ${command.name}}`);
-        },
-    ],
-    [
-        `${__dirname}/messages`,
-        /** @param {_Message} msg */
-        (msg) => {
-            const gv = msg.getValue;
-            PredefinedMessages.set(msg.name, Object.assign(msg, { getValue: (c) => { client.bumpRTS('predefinedMessages'); return gv(c); } }));
-            client.regRTS('predefinedMessages');
-            console.log(chalk`{bold Loaded Pre-defined message} {red ${msg.name}}`);
-        },
-    ],
-];
-
-// ? Sectors:
-// ? 0: Directory,
-// ? 1: Operation
-
-operations.forEach((s) => fs.readdirSync(s[0]).filter((f) => f !== 'example.js').map((f) => require(`${s[0]}/${f}`)).forEach(s[1]));
-new REST({ version: '10' })
-    .setToken(process.env.TOKEN)
-    .put(Routes.applicationCommands(process.env.CLIENT_ID), { body: interactions })
-    .then(() => console.log(chalk.green`Successfully registered application commands.`))
-    .catch(console.error);
-client.login(process.env.TOKEN);
 module.exports = client;
