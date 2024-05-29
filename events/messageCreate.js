@@ -41,7 +41,7 @@ module.exports = new Event(Events.MessageCreate)
                         .findIndex((value) => value === true);
                 if (executed === -1) return;
                 client.bumpRTS(`triggers.${['channel', 'role', 'user', 'message'][executed]}`);
-                return execute(message, client);
+                return execute(client, message);
             });
         if (content.startsWith(client.prefix)) {
             const command = Array.from(client.Commands.values())
@@ -75,6 +75,6 @@ module.exports = new Event(Events.MessageCreate)
                     ['dmDisabled', 'invalidChannelType', 'noPerms', 'noPerms', 'noPerms', 'disabled']
                         .map((e) => client.configs.defaults[e])[failureReason],
                 )
-                : command.messageExecute(message, client);
+                : command.messageExecute(client, message);
         }
     });

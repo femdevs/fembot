@@ -17,7 +17,7 @@ module.exports =
             .setName('serverinfo')
             .setDescription('Shows information about the server'),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const server = interaction.guild;
             const data = {
                 guildId: server.id,
@@ -95,7 +95,7 @@ module.exports =
                 .setThumbnail(data.guildIcon);
             await interaction.reply({ embeds: [embed] })
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const server = message.guild;
             const data = {
                 guildId: server.id,

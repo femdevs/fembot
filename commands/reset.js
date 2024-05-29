@@ -25,7 +25,7 @@ module.exports =
             .setName('reset')
             .setDescription('Reset the channel'),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             await interaction.reply('Resetting...');
             new Promise((r, _) => setTimeout(r, 1000))
                 .then(() => {
@@ -33,7 +33,7 @@ module.exports =
                     interaction.channel.delete();
                 })
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             await message.reply('Resetting...');
             new Promise((r, _) => setTimeout(r, 1000))
                 .then(() => {

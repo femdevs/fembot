@@ -17,10 +17,10 @@ module.exports =
             .setName('ping')
             .setDescription('Replies with Pong!'),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             await interaction.reply('Pong!');
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             await message.reply('Pong!');
         })
         .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });

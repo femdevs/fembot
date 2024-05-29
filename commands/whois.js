@@ -23,7 +23,7 @@ module.exports =
                     .setRequired(false)
             ),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const member = interaction.options.getMember('member') || interaction.member;
             const user = interaction.options.getUser('member') || interaction.user;
             const roles = member.roles.cache.map(role => role.toString()).slice(0, 35).join('\n- ').replace(/<[^>]$/m, '')
@@ -52,7 +52,7 @@ module.exports =
                 console.error(error);
             }
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const member = message.mentions.members.first() || message.member;
             const user = message.mentions.users.first() || message.author;
             const roles = member.roles.cache.map(role => role.toString()).slice(0, 35).join('\n- ').replace(/<[^>]$/m, '')

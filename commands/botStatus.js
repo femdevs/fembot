@@ -17,7 +17,7 @@ module.exports =
             .setName('botstatus')
             .setDescription('Bot Status')
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const data = client.stats()
             const embed = client.embed()
                 .setTitle('Bot Status')
@@ -39,7 +39,7 @@ module.exports =
                 )
             interaction.reply({ embeds: [embed] })
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const data = client.stats()
             const embed = client.embed()
                 .setTitle('Bot Status')

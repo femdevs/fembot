@@ -24,7 +24,7 @@ module.exports =
                     .setRequired(true)
             ),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const subreddit = interaction.options.getString('subreddit');
             await interaction.deferReply();
             const options = new Collection();
@@ -45,7 +45,7 @@ module.exports =
                 .setTimestamp()
             interaction.editReply({ embeds: [embed] });
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const subreddit = message.content.split(' ')[1];
             const options = new Collection();
             const res = await axios.get(`https://www.reddit.com/r/${subreddit}/new/.json?limit=100`, {

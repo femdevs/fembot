@@ -1,9 +1,9 @@
 const { ApplicationCommandType, ContextMenuCommandBuilder } = require('discord.js');
-const { Discord: { Initializers: { Components } } } = require('../../modules/util.js');
+const { Discord: { Initializers: { ContextMenu, ComponentInfo } } } = require('@therealbenpai/djs-client').Utils;
 
-module.exports = new Components.ContextMenu(
+module.exports = new ContextMenu(
     'NAME',
-    new Components.Info(
+    new ComponentInfo(
         'NAME',
         'DESCRIPTION',
         'User',
@@ -12,4 +12,4 @@ module.exports = new Components.ContextMenu(
         .setName('NAME')
         .setType(ApplicationCommandType.User),
 )
-    .setExecute(async (_interaction, _client) => { /* Do Stuff Here */ });
+    .setExecute(async (client, interaction) => { /* Do Stuff Here */ });

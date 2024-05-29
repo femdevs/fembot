@@ -9,7 +9,7 @@ const { Discord: { Initializers: { Event } } } = require('@therealbenpai/djs-cli
 
 module.exports = new Event(Events.InteractionCreate)
     .setExecute(async (client, interaction) => {
-        if (interaction.isAutocomplete()) return client.Commands.get(interaction.commandName).autocomplete(interaction, client);
+        if (interaction.isAutocomplete()) return client.Commands.get(interaction.commandName).autocomplete(client, interaction);
         if (interaction.isCommand()) {
             const command = client.Commands.get(interaction.commandName);
             if (!command) return;
@@ -40,7 +40,7 @@ module.exports = new Event(Events.InteractionCreate)
                     content: ['dmDisabled', 'invalidChannelType', 'noPerms', 'disabled']
                         .map((e) => client.configs.defaults[e])[failureReason - 1],
                 })
-                : command.commandExecute(interaction, client);
+                : command.commandExecute(client, interaction);
         }
         // if (interaction.isContextMenu()) {
         //     const command = client.ContextMenus.get(interaction.commandName);
@@ -48,7 +48,7 @@ module.exports = new Event(Events.InteractionCreate)
         //         return;
         //     }
         //     client.bumpRTS('components.contextMenus');
-        //     return command.commandExecute(interaction, client);
+        //     return command.commandExecute(client, interaction);
         // }
         if (
             interaction.isButton() ||
@@ -63,7 +63,7 @@ module.exports = new Event(Events.InteractionCreate)
             client.bumpRTS(`components.${interactionType}`);
             return client[interaction.isButton() ? 'Buttons' : interaction.isModalSubmit() ? 'Modals' : 'SelectMenus']
                 .get(interaction.customId)
-                .execute(interaction, client);
+                .execute(client, interaction);
         }
         const interactionType = [
             [ButtonInteraction, 'buttons'],
@@ -79,5 +79,5 @@ module.exports = new Event(Events.InteractionCreate)
         client.bumpRTS(`components.${InterType}`);
         return client[capitalizedInterType]
             .get(interaction[InterType === 'contextMenus' ? 'commandName' : 'customId'])
-            .execute(interaction, client);
+            .execute(client, interaction);
     });

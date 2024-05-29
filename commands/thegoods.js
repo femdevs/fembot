@@ -17,11 +17,11 @@ module.exports =
             .setName('thegoods')
             .setDescription('Take a guess'),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const file = new AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' });
             await interaction.reply({ content: 'Credit: Benpai', files: [file] });
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const file = new AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' });
             await message.reply({ content: 'Credit: Benpai', files: [file] });
         })

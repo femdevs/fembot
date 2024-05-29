@@ -1,9 +1,9 @@
 const { StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
-const { Discord: { Initializers: { Components } } } = require('../../modules/util.js');
+const { Discord: { Initializers: { SelectMenu, ComponentInfo } } } = require('@therealbenpai/djs-client').Utils;
 
-module.exports = new Components.SelectMenu(
+module.exports = new SelectMenu(
     'NAME',
-    new Components.Info(
+    new ComponentInfo(
         'NAME',
         'DESCRIPTION',
         'String',
@@ -20,4 +20,4 @@ module.exports = new Components.SelectMenu(
                 .setDescription('Description'),
         ),
 )
-    .setExecute(async (_interaction, _client) => { /* Do Stuff Here */ });
+    .setExecute(async (client, interaction) => { /* Do Stuff Here */ });

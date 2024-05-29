@@ -18,10 +18,10 @@ module.exports =
             .setName('thebo')
             .setDescription('THE BO'),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             await interaction.reply(thebo[Math.floor(Math.random() * thebo.length)]);
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             await message.reply(thebo[Math.floor(Math.random() * thebo.length)]);
         })
         .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });

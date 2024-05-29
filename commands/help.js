@@ -72,7 +72,7 @@ module.exports =
                 .setDescription('The command to get help with')
                 .setAutocomplete(true)),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const command = client.Commands.get(interaction.options.getString('command'));
             const check = checkCommand(interaction.options.getString('command'), command);
             if (check) {
@@ -80,7 +80,7 @@ module.exports =
             }
             interaction.reply({ embeds: [handle(client, Object.assign({}, command, command.info, command.type) || null)] });
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const command = client.Commands.get(message.content.split(' ').at(1));
             const check = checkCommand(message.content.split(' ').at(1), command);
             if (check) {
@@ -88,7 +88,7 @@ module.exports =
             }
             message.reply({ embeds: [handle(client, Object.assign({}, command, command.info, command.type) || null)] });
         })
-        .setAutocomplete(async (interaction, client) => {
+        .setAutocomplete(async (client, interaction) => {
             const choices = Array.from(client.Commands.values())
                 .filter((cmd) => Array.of(
                     !cmd.disabled,

@@ -17,7 +17,7 @@ module.exports =
             .setName('about')
             .setDescription('Get info about the bot'),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             interaction.reply({ embeds: [client.embed()
                 .setAuthor(
                     {
@@ -39,7 +39,7 @@ module.exports =
                     },
                 )] });
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             message.reply({ embeds: [client.embed()
                 .setAuthor(
                     {

@@ -1,8 +1,8 @@
-const { Discord: { Utils: { EmbedUtils }, Initializers: { Message: Msg } } } = require('@therealbenpai/djs-client').Utils
+const { Discord: { Utils: { Embed }, Initializers: { Message: Msg } } } = require('@therealbenpai/djs-client').Utils
 const { EmbedBuilder, ActionRowBuilder } = require('discord.js');
 
 module.exports = new Msg(
     'NAME',
     'READABLE NAME',
 )
-    .content((client) => { /* Do Stuff Here*/ });
+    .content(async (client) => { /* Do Stuff Here*/ });

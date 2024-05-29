@@ -32,7 +32,7 @@ module.exports =
                     .setRequired(true)
             ),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const type = interaction.options.getString('type');
             const data = interaction.options.getString('data');
             const req = await axios.get(`https://api.thefemdevs.com/barcode/gen/${type}`, {
@@ -43,7 +43,7 @@ module.exports =
             if (!req.status === 200) return interaction.reply({ embeds: [client.embed().setTitle('Data Invalid').setDescription('The data you provided is invalid for').setColor(0x660000).setFooter({ text: 'Please check the constraints for the barcode type you selected.' })] });
             return interaction.reply({ files: [new AttachmentBuilder(req.data, { name: `${type}-${require('uuid').v4()}.png` })] });
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const args = message.content.trim().split(/ +/g).slice(1);
             const type = args[0];
             const data = args.slice(1).join(' ');
@@ -55,7 +55,7 @@ module.exports =
             if (req.status !== 200) return message.reply({ embeds: [client.embed().setTitle('Data Invalid').setDescription('The data you provided is invalid for').setColor(0x660000).setFooter({ text: 'Please check the constraints for the barcode type you selected.' })] });
             return message.reply({ files: [new AttachmentBuilder(req.data, { name: `${type}-${require('uuid').v4()}.png` })] });
         })
-        .setAutocomplete(async (interaction, client) => {
+        .setAutocomplete(async (client, interaction) => {
             return interaction.respond(
                 (
                     new client.Fuse(

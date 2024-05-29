@@ -18,7 +18,7 @@ module.exports =
             .setName('astolfo')
             .setDescription('Take a guess'),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             await interaction.deferReply();
             const options = new Collection();
             const res = await axios.get(`https://www.reddit.com/r/Astolfo/new/.json?limit=100`, {
@@ -34,7 +34,7 @@ module.exports =
                 .setTimestamp()
             interaction.editReply({ embeds: [embed] });
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const options = new Collection();
             const res = await axios.get(`https://www.reddit.com/r/Astolfo/new/.json?limit=100`, {
                 headers: { 'User-Agent': 'Discord Bot (node-20)' },

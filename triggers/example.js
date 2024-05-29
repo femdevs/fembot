@@ -8,6 +8,6 @@ module.exports =
         new Trigger.Channel(false, true, { ids: [], types: [] }),
         new Trigger.Role(false, true, { ids: [] }),
         new Trigger.User(false, true, { ids: [] }),
-        async (message, client) => { /* Do Stuff Here */ },
     )
+        .setExecute((client, message) => { /* Do Stuff Here */ })
         .setGlobalDisable(true);

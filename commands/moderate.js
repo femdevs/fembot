@@ -106,7 +106,7 @@ module.exports =
                     )
             ),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const
                 scg = interaction.options.getSubcommandGroup(),
                 sc = interaction.options.getSubcommand();

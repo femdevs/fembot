@@ -10,7 +10,7 @@
   "license": "UNLICENCED",
   "dependencies": {
     "@discordjs/builders": "^1.4.0",
-    "@therealbenpai/djs-client": "^2.1.0",
+    "@therealbenpai/djs-client": "2.2.x",
     "axios": "^1.6.8",
     "chalk": "^3.0.0",
     "chalk-template": "^1.1.0",

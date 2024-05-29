@@ -1,9 +1,9 @@
 const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const { Discord: { Initializers: { Components } } } = require('../../modules/util.js');
+const { Discord: { Initializers: { Modal, ComponentInfo } } } = require('@therealbenpai/djs-client').Utils;
 
-module.exports = new Components.Modal(
+module.exports = new Modal(
     'NAME',
-    new Components.Info(
+    new ComponentInfo(
         'NAME',
         'DESCRIPTION',
         'Base Modal',
@@ -22,4 +22,4 @@ module.exports = new Components.Modal(
                 ),
         ),
 )
-    .setExecute(async (_interaction, _client) => { /* Do Stuff Here */ });
+    .setExecute(async (client, interaction) => { /* Do Stuff Here */ });

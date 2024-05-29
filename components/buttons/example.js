@@ -1,9 +1,9 @@
 const { ButtonBuilder, ButtonStyle } = require('discord.js');
-const { Discord: { Initializers: { Components } } } = require('../../modules/util.js');
+const { Discord: { Initializers: { Button, ComponentInfo } } } = require('@therealbenpai/djs-client').Utils;
 
-module.exports = new Components.Button(
+module.exports = new Button(
     'customID',
-    new Components.Info(
+    new ComponentInfo(
         'customID',
         'Button Description',
         'Primary',
@@ -13,4 +13,4 @@ module.exports = new Components.Button(
         .setLabel('Button Label')
         .setStyle(ButtonStyle.Primary),
 )
-    .setExecute(async (_interaction, _client) => { /* Do Stuff Here */ });
+    .setExecute(async (client, interaction) => { /* Do Stuff Here */ });

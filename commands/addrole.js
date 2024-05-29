@@ -34,7 +34,7 @@ module.exports =
             )
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             switch (interaction.options.getSubcommand()) {
                 case 'add':
                     const member = interaction.options.getMember('member');

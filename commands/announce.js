@@ -35,7 +35,7 @@ module.exports =
                     .setRequired(false)
             ),
     )
-        .setCommand(async (interaction, client) => {
+        .setCommand(async (client, interaction) => {
             const channel = interaction.options.getChannel('channel');
             const content = interaction.options.getString('content');
             const attachment = interaction.options.getAttachment('attachment');
@@ -51,7 +51,7 @@ module.exports =
             await channel.send({ embeds: [announcementEmbed], files: [attachment || null] });
             await interaction.reply({ embeds: [confirmationEmbed], ephemeral: true });
         })
-        .setMessage(async (message, client) => {
+        .setMessage(async (client, message) => {
             const { channel, attachments: files } = message;
             const content = message.content.slice(message.content.indexOf(' ') + 1);
             const announcementEmbed = client.embed()
