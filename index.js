@@ -1,6 +1,6 @@
 const
     { Client } = require('@therealbenpai/djs-client'),
-    { ActivityType } = require('discord.js'),
+    { ActivityType, GatewayIntentBits } = require('discord.js'),
     { config } = require('dotenv'),
     fs = require('fs'),
     { default: _fuseType } = require('fuse.js'),
@@ -21,7 +21,7 @@ const mainClient = new Client(
         selectMenusDir: `${__dirname}/components/selectMenus`,
         triggersDir: `${__dirname}/triggers`,
     },
-);
+)
 
 mainClient.Statuses
     .set(1, { type: ActivityType.Watching, name: 'the community server' })
@@ -32,6 +32,8 @@ mainClient
     .setBranding({ footer: { text: 'Made with ❤️ by the Pronouns.page' }, color: 0x2F3136 });
 
 const client = Object.assign(mainClient, { /** @type {_fuseType} */ Fuse });
+
+client.options.intents = client.options.intents.remove(GatewayIntentBits.GuildPresences);
 
 client.start();
 
