@@ -1,5 +1,5 @@
 const { Events } = require('discord.js');
-const { Discord: { Initializers: { Event } } } = require('@therealbenpai/djs-client').Utils;
+const { Discord: { Initializers: { Event }, Utils: { Embed } } } = require('@therealbenpai/djs-client').Utils
 
 module.exports = new Event(Events.MessageUpdate)
     .setExecute(async (client, oldMsg, newMsg) => {
@@ -9,6 +9,32 @@ module.exports = new Event(Events.MessageUpdate)
             newMsg.channel.type === 'DM',
             newMsg.partial,
         ).some((value) => value)) return;
+
+        const embed = client.embed()
+            .setAuthor(Embed.Author(
+                newMsg.author.tag,
+                null,
+                newMsg.author.displayAvatarURL({ dynamic: true }),
+            ))
+            .setDescription("Message edited")
+            .setFields(
+                Embed.Field(
+                    "Old Message",
+                    "```" + oldMsg.content + "```",
+                ),
+                Embed.Field(
+                    "New Message",
+                    "```" + newMsg.content + "```",
+                ),
+            )
+            .setFooter(Embed.Footer(
+                `Message ID: ${newMsg.id}`,
+                newMsg.guild.iconURL({ dynamic: true }),
+            ))
+            .setTimestamp();
+
+        client.channels.cache.get("1125149278915014666").send({ embeds: [embed] });
+
         if (newMsg.content.startsWith(client.prefix)) {
             const cmd = Array.from(client.Commands.values())
                 .find(
