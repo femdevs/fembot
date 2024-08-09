@@ -34,6 +34,7 @@ mainClient
 const client = Object.assign(mainClient, { /** @type {_fuseType} */ Fuse });
 
 client.options.intents = client.options.intents.remove(GatewayIntentBits.GuildPresences);
+client.options.intents = client.options.intents.remove(GatewayIntentBits.MessageContent);
 
 client.start();
 
