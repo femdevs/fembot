@@ -63,7 +63,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions({ dms: true }),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('help')
             .setDescription('Get help with the bot.')

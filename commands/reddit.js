@@ -10,10 +10,10 @@ module.exports =
             description: 'Grabs a random image off of a subreddit',
             usage: 'reddit <subreddit>',
             examples: ['reddit astolfo', 'reddit memes'],
-            disabled: false,
+            disabled: true,
         }),
         new Command.Restrictions(),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('reddit')
             .setDescription('Grabs a random image off of a subreddit')

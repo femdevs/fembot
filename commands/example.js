@@ -18,7 +18,7 @@ module.exports =
             users: [],
             dms: true,
         }),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('NAME')
             .setDescription('DESCRIPTION'),

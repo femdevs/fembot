@@ -12,7 +12,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions({}),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('about')
             .setDescription('Get info about the bot'),

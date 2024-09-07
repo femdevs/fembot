@@ -10,10 +10,10 @@ module.exports =
             description: 'Take a guess',
             usage: 'astolfo',
             examples: ['astolfo'],
-            disabled: false,
+            disabled: true,
         }),
         new Command.Restrictions(),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('astolfo')
             .setDescription('Take a guess'),
@@ -21,9 +21,9 @@ module.exports =
         .setCommand(async (client, interaction) => {
             await interaction.deferReply();
             const options = new Collection();
-            const res = await axios.get(`https://www.reddit.com/r/Astolfo/new/.json?limit=100`, {
+            const res = await axios.get(`http://www.reddit.com/r/Astolfo/new/.json?limit=100`, {
                 headers: { 'User-Agent': 'Discord Bot (node-20)' },
-                responseType: 'json'
+                responseType: 'json',
             });
             (await res.data).data.children.filter(post => post.data.post_hint == 'image').map(p => options.set(options.size, p))
             const randomLink = options.random();

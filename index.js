@@ -4,6 +4,7 @@ const
     { config } = require('dotenv'),
     fs = require('fs'),
     { default: _fuseType } = require('fuse.js'),
+    { CronJob } = require('cron'),
     Fuse = require('fuse.js');
 config({ path: [`${__dirname}/.env`, `${process.cwd()}/.env`, './.env'].find((f) => fs.existsSync(f)) });
 
@@ -37,5 +38,19 @@ client.options.intents = client.options.intents.remove(GatewayIntentBits.GuildPr
 client.options.intents = client.options.intents.remove(GatewayIntentBits.MessageContent);
 
 client.start();
+
+const cron = new CronJob(
+    '0 */5 * * * *',
+    async () => {
+        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/GVDk6gBXr7rkxDYjUSLGgAY4")
+    },
+    null,
+    true,
+    'America/New_York',
+    null,
+    true
+);
+
+cron.start();
 
 module.exports = client;

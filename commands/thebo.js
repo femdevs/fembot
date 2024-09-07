@@ -13,7 +13,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions(),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('thebo')
             .setDescription('THE BO'),

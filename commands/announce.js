@@ -12,7 +12,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions({ perm: PermissionFlagsBits.ModerateMembers, dms: true }),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('announce')
             .setDescription('Make an announcement using the bot.')

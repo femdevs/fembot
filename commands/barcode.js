@@ -14,7 +14,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions(),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('barcode')
             .setDescription('Create a barcode from a string.')

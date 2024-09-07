@@ -20,7 +20,7 @@ module.exports =
             ],
             dms: true,
         }),
-        { slash: true, text: true },
+        { slash: true, text: false },
         new SlashCommandBuilder()
             .setName('reset')
             .setDescription('Reset the channel'),
