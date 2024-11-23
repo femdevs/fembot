@@ -17,6 +17,6 @@ module.exports =
             .setName('stats')
             .setDescription('Check how many times you have ran a command!'),
     )
-        .setCommand(async (_interaction, _client) => { /* Do Stuff Here */ })
-        .setMessage(async (_message, _client) => { /* Do Stuff Here */ })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setCommand(async (client, interaction) => { /* Do Stuff Here */ })
+        .setMessage(async (client, message) => { /* Do Stuff Here */ })
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

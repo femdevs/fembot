@@ -10,10 +10,10 @@ module.exports =
             description: 'Grabs a random image off of a subreddit',
             usage: 'reddit <subreddit>',
             examples: ['reddit astolfo', 'reddit memes'],
-            disabled: true,
+            disabled: false,
         }),
         new Command.Restrictions(),
-        { slash: true, text: false },
+        { slash: true, text: true },
         new SlashCommandBuilder()
             .setName('reddit')
             .setDescription('Grabs a random image off of a subreddit')
@@ -25,44 +25,45 @@ module.exports =
             ),
     )
         .setCommand(async (client, interaction) => {
-            const subreddit = interaction.options.getString('subreddit');
             await interaction.deferReply();
-            const options = new Collection();
-            const res = await axios.get(`https://www.reddit.com/r/${subreddit}/new/.json?limit=100`, {
-                headers: { 'User-Agent': 'Discord Bot (node-20)' },
-                responseType: 'json'
-            });
-            (await res.data).data.children.filter(post => post.data.post_hint == 'image').map(p => options.set(options.size, p))
-            const randomLink = options.random();
+            const subreddit = interaction.options.getString('subreddit');
+            const redditCredentials = Database.prepare('SELECT * from reddit ORDER BY RANDOM() LIMIT 1').get();
+            delete redditCredentials.id;
+            const reddit = new RedditSession(redditCredentials);
+            const sub = reddit.getSubreddit("r/" + subreddit)
+            let post = await sub.getRandomSubmission();
+            const validExtensions = ['jpg', 'png', 'jpeg', 'gif'];
+            while (!validExtensions.includes(post.url.split('.').pop())) {
+                post = await sub.getRandomSubmission()
+            }
+            /** @type {RedditSession.Submission} */
+            const randomLink = post;
             const embed = client.embed()
-                .setTitle(randomLink.data.title)
-                .setURL(randomLink.data.url)
-                .setImage(randomLink.data.url)
-                .setFooter({
-                    text: `Requested by ${interaction.user.tag} | Subreddit: ${subreddit}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                })
+                .setTitle(randomLink.title)
+                .setURL(randomLink.url)
+                .setImage(randomLink.url)
                 .setTimestamp()
             interaction.editReply({ embeds: [embed] });
         })
         .setMessage(async (client, message) => {
-            const subreddit = message.content.split(' ')[1];
-            const options = new Collection();
-            const res = await axios.get(`https://www.reddit.com/r/${subreddit}/new/.json?limit=100`, {
-                headers: { 'User-Agent': 'Discord Bot (node-20)' },
-                responseType: 'json'
-            });
-            (await res.data).data.children.filter(post => post.data.post_hint == 'image').map(p => options.set(options.size, p))
-            const randomLink = options.random();
+            const args = message.content.split(' ').slice(1);
+            const subreddit = args.join(' ');
+            const redditCredentials = Database.prepare('SELECT * from reddit ORDER BY RANDOM() LIMIT 1').get();
+            delete redditCredentials.id;
+            const reddit = new RedditSession(redditCredentials);
+            const sub = reddit.getSubreddit("r/" + subreddit)
+            let post = await sub.getRandomSubmission();
+            const validExtensions = ['jpg', 'png', 'jpeg', 'gif'];
+            while (!validExtensions.includes(post.url.split('.').pop())) {
+                post = await sub.getRandomSubmission()
+            }
+            /** @type {RedditSession.Submission} */
+            const randomLink = post;
             const embed = client.embed()
-                .setTitle(randomLink.data.title)
-                .setURL(randomLink.data.url)
-                .setImage(randomLink.data.url)
-                .setFooter({
-                    text: `Requested by ${message.author.tag} | Subreddit: ${subreddit}`,
-                    iconURL: message.author.displayAvatarURL()
-                })
+                .setTitle(randomLink.title)
+                .setURL(randomLink.url)
+                .setImage(randomLink.url)
                 .setTimestamp()
             message.reply({ embeds: [embed] });
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

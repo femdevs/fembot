@@ -12,7 +12,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions({ dms: true }),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('whois')
             .setDescription('Get information about a user.')
@@ -81,4 +81,4 @@ module.exports =
                 console.error(error);
             }
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

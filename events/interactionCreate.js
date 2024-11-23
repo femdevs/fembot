@@ -20,9 +20,9 @@ module.exports = new Event(Events.InteractionCreate)
                 : !Boolean(command.channelLimits) && command.channelLimits.includes(interaction.channel.type)
                     ? 2
                     : Array.of(
-                        [!Boolean(command.requiredPerm), Boolean(interaction.guild), !interaction.member.permissions.has(command.requiredPerm)],
-                        [!Boolean(command.allowedRoles), !interaction.member.roles.cache.some(({ id }) => command.allowedRoles.includes(id))],
-                        [!Boolean(command.allowedUsers), !command.allowedUsers.includes(interaction.member.id)],
+                        [!Boolean(command.requiredPerm), Boolean(interaction.guild), !interaction.member?.permissions?.has(command.requiredPerm || 0n)],
+                        [!Boolean(command.allowedRoles), !interaction.member?.roles?.cache?.some(({ id }) => command.allowedRoles.includes(id))],
+                        [!Boolean(command.allowedUsers), !command.allowedUsers.includes(interaction.user.id)],
                     ).some((value) => value.every(Boolean))
                         ? 3
                         : command.disabled

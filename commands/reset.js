@@ -20,7 +20,7 @@ module.exports =
             ],
             dms: true,
         }),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('reset')
             .setDescription('Reset the channel'),
@@ -41,4 +41,4 @@ module.exports =
                     message.channel.delete();
                 })
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

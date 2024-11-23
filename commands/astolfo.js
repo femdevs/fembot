@@ -1,6 +1,10 @@
 const { SlashCommandBuilder, Collection } = require('discord.js');
 const { Discord: { Initializers: { Command } } } = require('@therealbenpai/djs-client').Utils;
-const axios = require('axios');
+const RedditSession = require('snoowrap');
+const SQLite = require('better-sqlite3');
+
+const Database = new SQLite('./database.db');
+
 module.exports =
     new Command(
         'astolfo',
@@ -10,44 +14,52 @@ module.exports =
             description: 'Take a guess',
             usage: 'astolfo',
             examples: ['astolfo'],
-            disabled: true,
+            disabled: false,
         }),
         new Command.Restrictions(),
-        { slash: true, text: false },
+        { slash: true, text: true },
         new SlashCommandBuilder()
             .setName('astolfo')
             .setDescription('Take a guess'),
     )
         .setCommand(async (client, interaction) => {
             await interaction.deferReply();
-            const options = new Collection();
-            const res = await axios.get(`http://www.reddit.com/r/Astolfo/new/.json?limit=100`, {
-                headers: { 'User-Agent': 'Discord Bot (node-20)' },
-                responseType: 'json',
-            });
-            (await res.data).data.children.filter(post => post.data.post_hint == 'image').map(p => options.set(options.size, p))
-            const randomLink = options.random();
+            const redditCredentials = Database.prepare('SELECT * from reddit ORDER BY RANDOM() LIMIT 1').get();
+            delete redditCredentials.id;
+            const reddit = new RedditSession(redditCredentials);
+            const sub = reddit.getSubreddit("r/Astolfo")
+            let post = await sub.getRandomSubmission();
+            const validExtensions = ['jpg', 'png', 'jpeg', 'gif'];
+            while (!validExtensions.includes(post.url.split('.').pop())) {
+                post = await sub.getRandomSubmission()
+            }
+            /** @type {RedditSession.Submission} */
+            const randomLink = post;
             const embed = client.embed()
-                .setTitle(randomLink.data.title)
-                .setURL(randomLink.data.url)
-                .setImage(randomLink.data.url)
+                .setTitle(randomLink.title)
+                .setURL(randomLink.url)
+                .setImage(randomLink.url)
                 .setTimestamp()
             interaction.editReply({ embeds: [embed] });
         })
         .setMessage(async (client, message) => {
             const options = new Collection();
-            const res = await axios.get(`https://www.reddit.com/r/Astolfo/new/.json?limit=100`, {
-                headers: { 'User-Agent': 'Discord Bot (node-20)' },
-                responseType: 'json'
-            });
-            (await res.data).data.children.filter(post => post.data.post_hint == 'image').map(p => options.set(options.size, p))
-            const randomLink = options.random();
+            const redditCredentials = Database.prepare('SELECT * from reddit ORDER BY RANDOM() LIMIT 1').get();
+            delete redditCredentials.id;
+            const reddit = new RedditSession(redditCredentials);
+            const sub = reddit.getSubreddit("r/Astolfo")
+            let post = await sub.getRandomSubmission();
+            const validExtensions = ['jpg', 'png', 'jpeg', 'gif'];
+            while (!validExtensions.includes(post.url.split('.').pop())) {
+                post = await sub.getRandomSubmission()
+            }
+            /** @type {RedditSession.Submission} */
+            const randomLink = post;
             const embed = client.embed()
-                .setTitle(randomLink.data.title)
-                .setURL(randomLink.data.url)
-                .setImage(randomLink.data.url)
+                .setTitle(randomLink.title)
+                .setURL(randomLink.url)
+                .setImage(randomLink.url)
                 .setTimestamp()
-
             message.reply({ embeds: [embed] });
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

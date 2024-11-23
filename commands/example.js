@@ -18,11 +18,11 @@ module.exports =
             users: [],
             dms: true,
         }),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('NAME')
             .setDescription('DESCRIPTION'),
     )
-        .setCommand(async (_interaction, _client) => { /* Do Stuff Here */ })
-        .setMessage(async (_message, _client) => { /* Do Stuff Here */ })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setCommand(async (client, interaction) => { /* Do Stuff Here */ })
+        .setMessage(async (client, message) => { /* Do Stuff Here */ })
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

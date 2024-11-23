@@ -12,15 +12,16 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions(),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('ping')
             .setDescription('Replies with Pong!'),
     )
         .setCommand(async (client, interaction) => {
+            if (client.developers.get())
             await interaction.reply('Pong!');
         })
         .setMessage(async (client, message) => {
             await message.reply('Pong!');
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

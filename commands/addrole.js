@@ -12,7 +12,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions({ perm: PermissionFlagsBits.ManageRoles, dms: true }),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('role')
             .setDescription('Manage roles for a user.')
@@ -59,4 +59,4 @@ module.exports =
             }
         })
         .setMessage(async (_message, _client) => { /* Do Stuff Here */ })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

@@ -12,7 +12,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions({ perm: PermissionFlagsBits.ModerateMembers, dms: true }),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('announce')
             .setDescription('Make an announcement using the bot.')
@@ -64,4 +64,4 @@ module.exports =
                 .setColor(0xe31e35);
             await channel.send({ embeds: [announcementEmbed], files });
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

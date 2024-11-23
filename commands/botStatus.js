@@ -12,7 +12,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions(),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('botstatus')
             .setDescription('Bot Status')
@@ -61,4 +61,4 @@ module.exports =
                 )
             message.reply({ embeds: [embed] })
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });

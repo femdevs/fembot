@@ -12,7 +12,7 @@ module.exports =
             disabled: false,
         }),
         new Command.Restrictions({dms: true}),
-        { slash: true, text: false },
+        { slash: true, text: true},
         new SlashCommandBuilder()
             .setName('serverinfo')
             .setDescription('Shows information about the server'),
@@ -155,4 +155,4 @@ module.exports =
                 .setThumbnail(data.guildIcon);
             await message.reply({ embeds: [embed] });
         })
-        .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
+        .setAutocomplete(async (client, interaction) => { /* Do Stuff Here */ });
