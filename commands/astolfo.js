@@ -1,9 +1,5 @@
 const { SlashCommandBuilder, Collection } = require('discord.js');
 const { Discord: { Initializers: { Command } } } = require('@therealbenpai/djs-client').Utils;
-const RedditSession = require('snoowrap');
-const SQLite = require('better-sqlite3');
-
-const Database = new SQLite('./database.db');
 
 module.exports =
     new Command(
@@ -24,41 +20,34 @@ module.exports =
     )
         .setCommand(async (client, interaction) => {
             await interaction.deferReply();
-            const redditCredentials = Database.prepare('SELECT * from reddit ORDER BY RANDOM() LIMIT 1').get();
-            delete redditCredentials.id;
-            const reddit = new RedditSession(redditCredentials);
-            const sub = reddit.getSubreddit("r/Astolfo")
-            let post = await sub.getRandomSubmission();
-            const validExtensions = ['jpg', 'png', 'jpeg', 'gif'];
-            while (!validExtensions.includes(post.url.split('.').pop())) {
-                post = await sub.getRandomSubmission()
-            }
-            /** @type {RedditSession.Submission} */
-            const randomLink = post;
+            const imageID = await fetch(
+                'https://astolfo.rocks/api/images/random?rating=questionable',
+                {
+                    headers: {
+                        'accept': 'application/json',
+                    }
+                }
+            ).then((res) => res.json());
             const embed = client.embed()
-                .setTitle(randomLink.title)
-                .setURL(randomLink.url)
-                .setImage(randomLink.url)
+                .setTitle(`Astolfo Image #${imageID.id}`)
+                .setURL(`https://astolfo.rocks/astolfo/${imageID.id}.${imageID.file_extension}`)
+                .setImage(`https://astolfo.rocks/astolfo/${imageID.id}.${imageID.file_extension}`)
                 .setTimestamp()
             interaction.editReply({ embeds: [embed] });
         })
         .setMessage(async (client, message) => {
-            const options = new Collection();
-            const redditCredentials = Database.prepare('SELECT * from reddit ORDER BY RANDOM() LIMIT 1').get();
-            delete redditCredentials.id;
-            const reddit = new RedditSession(redditCredentials);
-            const sub = reddit.getSubreddit("r/Astolfo")
-            let post = await sub.getRandomSubmission();
-            const validExtensions = ['jpg', 'png', 'jpeg', 'gif'];
-            while (!validExtensions.includes(post.url.split('.').pop())) {
-                post = await sub.getRandomSubmission()
-            }
-            /** @type {RedditSession.Submission} */
-            const randomLink = post;
+            const imageID = await fetch(
+                'https://astolfo.rocks/api/images/random?rating=questionable',
+                {
+                    headers: {
+                        'accept': 'application/json',
+                    }
+                }
+            ).then((res) => res.json());
             const embed = client.embed()
-                .setTitle(randomLink.title)
-                .setURL(randomLink.url)
-                .setImage(randomLink.url)
+                .setTitle(`Astolfo Image #${imageID.id}`)
+                .setURL(`https://astolfo.rocks/astolfo/${imageID.id}.${imageID.file_extension}`)
+                .setImage(`https://astolfo.rocks/astolfo/${imageID.id}.${imageID.file_extension}`)
                 .setTimestamp()
             message.reply({ embeds: [embed] });
         })

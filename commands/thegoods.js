@@ -31,7 +31,13 @@ module.exports =
             });
         })
         .setMessage(async (client, message) => {
-            const file = new AttachmentBuilder(client.sfiles.theGoods, { name: 'theGoods.mp3' });
-            await message.reply({ files: [file] });
+            await message.reply({
+                files: [
+                    new AttachmentBuilder(
+                        fs.readFileSync(`${process.cwd()}/the_goods.mp3`),
+                        { name: 'theGoods.mp3' }
+                    )
+                ]
+            });
         })
         .setAutocomplete(async (_interaction, _client) => { /* Do Stuff Here */ });
