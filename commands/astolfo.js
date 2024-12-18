@@ -21,7 +21,7 @@ module.exports =
         .setCommand(async (client, interaction) => {
             await interaction.deferReply();
             const imageID = await fetch(
-                'https://astolfo.rocks/api/images/random?rating=questionable',
+                'https://astolfo.rocks/api/images/random?rating=safe',
                 {
                     headers: {
                         'accept': 'application/json',
@@ -37,7 +37,7 @@ module.exports =
         })
         .setMessage(async (client, message) => {
             const imageID = await fetch(
-                'https://astolfo.rocks/api/images/random?rating=questionable',
+                'https://astolfo.rocks/api/images/random?rating=safe',
                 {
                     headers: {
                         'accept': 'application/json',
